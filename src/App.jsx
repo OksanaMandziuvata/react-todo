@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import TodoForm from './TodoForm';
-import TodoList from './TodoList';
+import TodoColumn from './TodoColumn';
+import './styles.css';
 
 export default function App() {
+  const [columnTitle, setColumnTitle] = useState('To Do');
   const [todos, setTodos] = useState([]);
+  const [isColumnVisible, setIsColumnVisible] = useState(true);
 
   const handleAddTodo = (text) => {
     setTodos([...todos, text]);
@@ -13,11 +15,31 @@ export default function App() {
     setTodos(todos.filter((_, index) => index !== indexToRemove));
   };
 
+  const handleEditTodo = (indexToEdit, newText) => {
+    const newTodos = [...todos];
+    newTodos[indexToEdit] = newText;
+    setTodos(newTodos);
+  };
+
   return (
-    <div>
-      <h1>Todo</h1>
-      <TodoForm onAddTodo={handleAddTodo} />
-      <TodoList todos={todos} onDeleteTodo={handleDeleteTodo} />
+    <div className="app-container">
+      {!isColumnVisible && (
+        <button onClick={() => setIsColumnVisible(true)} className="add-column-btn">
+          + Додати колонку
+        </button>
+      )}
+
+      {isColumnVisible && (
+        <TodoColumn
+          title={columnTitle}
+          todos={todos}
+          onAddTodo={handleAddTodo}
+          onDeleteTodo={handleDeleteTodo}
+          onEditTodo={handleEditTodo}
+          onEditColumnTitle={setColumnTitle}
+          onDeleteColumn={() => setIsColumnVisible(false)}
+        />
+      )}
     </div>
   );
 }

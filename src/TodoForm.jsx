@@ -17,11 +17,13 @@ export default function TodoForm({ onAddTodo }) {
   };
 
   return (
-    <div>
+    <div className="todo-form">
       <input 
         value={text} 
         onChange={(e) => setText(e.target.value)}
         onKeyDown={handleKeyDown}
+        placeholder="Нове завдання..."
+        className="todo-input"
       />
       <button onClick={handleSubmit}>
         Додати
