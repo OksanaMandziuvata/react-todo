@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import TodoColumn from './TodoColumn';
-import './styles.css';
+import './styles.scss';
 
 export default function App() {
   const [columns, setColumns] = useState([
