@@ -3,43 +3,62 @@ import TodoColumn from './TodoColumn';
 import './styles.css';
 
 export default function App() {
-  const [columnTitle, setColumnTitle] = useState('To Do');
-  const [todos, setTodos] = useState([]);
-  const [isColumnVisible, setIsColumnVisible] = useState(true);
+  const [columns, setColumns] = useState([
+    { id: 1, title: 'To Do', todos: [] }
+  ]);
 
-  const handleAddTodo = (text) => {
-    setTodos([...todos, text]);
+  const handleAddColumn = () => {
+    const newColumn = {
+      id: Date.now(),
+      title: 'Нова колонка',
+      todos: []
+    };
+    setColumns([...columns, newColumn]);
   };
 
-  const handleDeleteTodo = (indexToRemove) => {
-    setTodos(todos.filter((_, index) => index !== indexToRemove));
+  const handleDeleteColumn = (columnId) => {
+    setColumns(columns.filter(col => col.id !== columnId));
   };
 
-  const handleEditTodo = (indexToEdit, newText) => {
-    const newTodos = [...todos];
-    newTodos[indexToEdit] = newText;
-    setTodos(newTodos);
+  const handleEditColumnTitle = (columnId, newTitle) => {
+    setColumns(columns.map(col => 
+      col.id === columnId ? { ...col, title: newTitle } : col
+    ));
+  };
+
+  const handleAddTodo = (columnId, text) => {
+    setColumns(columns.map(col => 
+      col.id === columnId ? { ...col, todos: [...col.todos, text] } : col
+    ));
+  };
+
+  const handleDeleteTodo = (columnId, todoIndex) => {
+    setColumns(columns.map(col => 
+      col.id === columnId 
+        ? { ...col, todos: col.todos.filter((_, index) => index !== todoIndex) } 
+        : col
+    ));
   };
 
   return (
     <div className="app-container">
-      {!isColumnVisible && (
-        <button onClick={() => setIsColumnVisible(true)} className="add-column-btn">
-          + Додати колонку
-        </button>
-      )}
-
-      {isColumnVisible && (
-        <TodoColumn
-          title={columnTitle}
-          todos={todos}
-          onAddTodo={handleAddTodo}
-          onDeleteTodo={handleDeleteTodo}
-          onEditTodo={handleEditTodo}
-          onEditColumnTitle={setColumnTitle}
-          onDeleteColumn={() => setIsColumnVisible(false)}
-        />
-      )}
+      <button onClick={handleAddColumn} className="add-column-btn">
+        + Додати колонку
+      </button>
+      
+      <div className="columns-container">
+        {columns.map(column => (
+          <TodoColumn
+            key={column.id}
+            title={column.title}
+            todos={column.todos}
+            onAddTodo={(text) => handleAddTodo(column.id, text)}
+            onDeleteTodo={(todoIndex) => handleDeleteTodo(column.id, todoIndex)}
+            onEditColumnTitle={(newTitle) => handleEditColumnTitle(column.id, newTitle)}
+            onDeleteColumn={() => handleDeleteColumn(column.id)}
+          />
+        ))}
+      </div>
     </div>
   );
 }
