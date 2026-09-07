@@ -1,7 +1,7 @@
 export default function TodoItem({ todo, index, onDeleteTodo }) {
   return (
-    <li>
-      {todo}
+    <li className="todo-item">
+      <span>{todo}</span>
       <button onClick={() => onDeleteTodo(index)}>
         Видалити
       </button>
