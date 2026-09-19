@@ -7,11 +7,13 @@ export default function BulkActionsBar({
   onBulkDelete, 
   columns 
 }) {
+  if (selectedCount === 0) return null;
+
   return (
     <div className="bulk-action-bar">
       <div className="selected-count">
         <span className="count-badge">{selectedCount} selected</span>
-        {selectedCount > 0 && <button className="clear-selection" onClick={onClearSelection}>✕</button>}
+        <button className="clear-selection" onClick={onClearSelection}>✕</button>
       </div>
       <div className="bulk-buttons">
         <button className="btn-success-text" onClick={onBulkMarkComplete}>Mark complete</button>

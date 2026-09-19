@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import DragIcon from './assets/DragIcon';
+import EditIcon from './assets/EditIcon';
+import CloseIcon from './assets/CloseIcon';
 
 export default function ColumnHeader({ title, todosCount, completedCount, onEditColumnTitle, onDeleteColumn }) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -11,6 +14,14 @@ export default function ColumnHeader({ title, todosCount, completedCount, onEdit
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') handleSaveTitle();
+    if (e.key === 'Escape') {
+      setTitleText(title);
+      setIsEditingTitle(false);
+    }
+  };
+
   return (
     <div className="column-header">
       {isEditingTitle ? (
@@ -18,6 +29,7 @@ export default function ColumnHeader({ title, todosCount, completedCount, onEdit
           <input 
             value={titleText} 
             onChange={(e) => setTitleText(e.target.value)} 
+            onKeyDown={handleKeyDown}
             className="column-title-input"
             autoFocus
           />
@@ -26,13 +38,19 @@ export default function ColumnHeader({ title, todosCount, completedCount, onEdit
       ) : (
         <>
           <div className="column-title-group">
-            <span className="drag-handle">::</span>
+            <span className="drag-handle">
+              <DragIcon size={14} color="#64748B" />
+            </span>
             <h3>{title}</h3>
             <span className="task-count">{completedCount}/{todosCount}</span>
           </div>
           <div className="column-header-actions">
-            <button onClick={() => setIsEditingTitle(true)} className="btn-icon">Edit</button>
-            <button onClick={onDeleteColumn} className="btn-icon btn-delete">Del</button>
+            <button onClick={() => setIsEditingTitle(true)} className="btn-icon">
+              <EditIcon size={14} color="currentColor" />
+            </button>
+            <button onClick={onDeleteColumn} className="btn-icon btn-delete">
+              <CloseIcon size={14} color="currentColor" />
+            </button>
           </div>
         </>
       )}

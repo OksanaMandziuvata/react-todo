@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import EditIcon from './assets/EditIcon';
+import TrashIcon from './assets/TrashIcon';
+import DragIcon from './assets/DragIcon';
 
 export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onToggleSelect, onToggleComplete }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -29,7 +32,9 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
           className="todo-checkbox select-checkbox"
         />
         
-        <span className="drag-handle">::</span>
+        <span className="drag-handle">
+          <DragIcon size={14} color="#64748B" />
+        </span>
         
         <input 
           type="checkbox" 
@@ -47,7 +52,7 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
             className="edit-todo-input"
           />
         ) : (
-          <span className={todo.isCompleted ? 'completed-text' : ''}>
+          <span className={todo.isCompleted ? 'completed-text' : 'todo-text-content'}>
             {todo.text}
           </span>
         )}
@@ -58,12 +63,12 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
             <button className="btn-icon" onClick={handleSave}>Save</button>
           ) : (
             <button className="btn-icon" onClick={() => setIsEditing(true)}>
-              <img src="/edit.png" alt="Edit" width="14" height="14" />
+              <EditIcon size={14} color="currentColor" />
             </button>
           )}
           
           <button className="btn-icon btn-delete" onClick={() => onDeleteTodo(columnId, todo.id)}>
-            <img src="/frame.png" alt="Delete" width="14" height="14" />
+            <TrashIcon size={14} color="currentColor" />
           </button>
       </div>
     </li>
