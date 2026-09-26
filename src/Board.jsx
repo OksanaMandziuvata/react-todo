@@ -10,9 +10,12 @@ export default function Board() {
   const [filterType, setFilterType] = useState('All'); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newColumnTitle, setNewColumnTitle] = useState('');
+  const [deleteConfig, setDeleteConfig] = useState({ isOpen: false, action: null, message: '' });
+
+  const isColumnTitleValid = newColumnTitle.trim().length >= 3;
 
   const handleConfirmAddColumn = () => {
-    if (newColumnTitle.trim()) {
+    if (isColumnTitleValid) {
       const newColumn = { id: Date.now(), title: newColumnTitle.trim(), todos: [] };
       setColumns([...columns, newColumn]);
       setIsModalOpen(false);
@@ -20,8 +23,27 @@ export default function Board() {
     }
   };
 
+  const promptDelete = (action, message = "Are you sure you want to delete?") => {
+    setDeleteConfig({ isOpen: true, action, message });
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfig.action) deleteConfig.action();
+    setDeleteConfig({ isOpen: false, action: null, message: '' });
+  };
+
   const handleDeleteColumn = (columnId) => {
-    setColumns(columns.filter(col => col.id !== columnId));
+    promptDelete(() => setColumns(prev => prev.filter(col => col.id !== columnId)));
+  };
+
+  const handleDeleteTodo = (columnId, todoId) => {
+    promptDelete(() => setColumns(prev => prev.map(col => 
+      col.id === columnId ? { ...col, todos: col.todos.filter(todo => todo.id !== todoId) } : col
+    )));
+  };
+
+  const handleBulkDelete = () => {
+    promptDelete(() => setColumns(prev => prev.map(col => ({ ...col, todos: col.todos.filter(t => !t.isSelected) }))));
   };
 
   const handleEditColumnTitle = (columnId, newTitle) => {
@@ -32,12 +54,6 @@ export default function Board() {
     const newTodo = { id: Date.now(), text, isCompleted: false, isSelected: false };
     setColumns(columns.map(col => 
       col.id === columnId ? { ...col, todos: [...col.todos, newTodo] } : col
-    ));
-  };
-
-  const handleDeleteTodo = (columnId, todoId) => {
-    setColumns(columns.map(col => 
-      col.id === columnId ? { ...col, todos: col.todos.filter(todo => todo.id !== todoId) } : col
     ));
   };
 
@@ -83,10 +99,6 @@ export default function Board() {
 
   const handleBulkMarkIncomplete = () => {
     setColumns(columns.map(col => ({ ...col, todos: col.todos.map(t => t.isSelected ? { ...t, isCompleted: false } : t) })));
-  };
-
-  const handleBulkDelete = () => {
-    setColumns(columns.map(col => ({ ...col, todos: col.todos.filter(t => !t.isSelected) })));
   };
 
   const handleBulkMove = (e) => {
@@ -153,10 +165,26 @@ export default function Board() {
 
       <Modal 
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => { setIsModalOpen(false); setNewColumnTitle(''); }}
         onConfirm={handleConfirmAddColumn}
+        title="Add new column"
+        mode="input"
         value={newColumnTitle}
         onChange={setNewColumnTitle}
+        isValid={isColumnTitleValid}
+        errorMessage="Title must be at least 3 characters long."
+        confirmText="Add"
+      />
+
+      <Modal 
+        isOpen={deleteConfig.isOpen}
+        onClose={() => setDeleteConfig({ isOpen: false, action: null, message: '' })}
+        onConfirm={confirmDelete}
+        title="Confirm Deletion"
+        mode="confirm"
+        message={deleteConfig.message}
+        isValid={true}
+        confirmText="Delete"
       />
     </>
   );
