@@ -65,9 +65,9 @@ export default function Board() {
     ));
   };
 
-  const handleSelectAllInColumn = (columnId, selectAll) => {
+  const handleSelectAllInColumn = (columnId, visibleIds, selectAll) => {
     setColumns(columns.map(col => 
-      col.id === columnId ? { ...col, todos: col.todos.map(todo => ({ ...todo, isSelected: selectAll })) } : col
+      col.id === columnId ? { ...col, todos: col.todos.map(todo => visibleIds.includes(todo.id) ? { ...todo, isSelected: selectAll } : todo) } : col
     ));
   };
 

@@ -42,7 +42,7 @@ export default function TodoColumn({
             type="checkbox" 
             className="todo-checkbox select-checkbox"
             checked={areAllSelected}
-            onChange={(e) => onSelectAllInColumn(columnId, e.target.checked)}
+            onChange={(e) => onSelectAllInColumn(columnId, filteredTodos.map(t => t.id), e.target.checked)}
         />
         <span>Select all</span>
       </div>
