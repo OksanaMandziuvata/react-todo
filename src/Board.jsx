@@ -131,24 +131,31 @@ export default function Board() {
       />
       
       <div className="columns-container">
-        {columns.map(column => (
-          <TodoColumn
-            key={column.id}
-            columnId={column.id}
-            title={column.title}
-            todos={column.todos}
-            globalSearchQuery={globalSearch}
-            filterType={filterType}
-            onAddTodo={(text) => handleAddTodo(column.id, text)}
-            onDeleteTodo={handleDeleteTodo}
-            onEditTodo={handleEditTodo}
-            onToggleSelect={handleToggleSelect}
-            onToggleComplete={handleToggleComplete} 
-            onSelectAllInColumn={handleSelectAllInColumn}
-            onEditColumnTitle={(newTitle) => handleEditColumnTitle(column.id, newTitle)}
-            onDeleteColumn={() => handleDeleteColumn(column.id)}
-          />
-        ))}
+        {columns.length === 0 ? (
+          <div className="empty-board-message">
+            <h3>Your board is empty</h3>
+            <p>Click "+ Add Column" in the top right to get started.</p>
+          </div>
+        ) : (
+          columns.map(column => (
+            <TodoColumn
+              key={column.id}
+              columnId={column.id}
+              title={column.title}
+              todos={column.todos}
+              globalSearchQuery={globalSearch}
+              filterType={filterType}
+              onAddTodo={(text) => handleAddTodo(column.id, text)}
+              onDeleteTodo={handleDeleteTodo}
+              onEditTodo={handleEditTodo}
+              onToggleSelect={handleToggleSelect}
+              onToggleComplete={handleToggleComplete} 
+              onSelectAllInColumn={handleSelectAllInColumn}
+              onEditColumnTitle={(newTitle) => handleEditColumnTitle(column.id, newTitle)}
+              onDeleteColumn={() => handleDeleteColumn(column.id)}
+            />
+          ))
+        )}
       </div>
 
       <Modal 
