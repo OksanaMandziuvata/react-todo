@@ -24,7 +24,7 @@ export default function TodoColumn({
     return matchesSearch && matchesFilter;
   });
 
-  const areAllSelected = todos.length > 0 && todos.every(todo => todo.isSelected);
+  const areAllSelected = filteredTodos.length > 0 && filteredTodos.every(todo => todo.isSelected);
   const completedCount = todos.filter(t => t.isCompleted).length;
 
   return (
