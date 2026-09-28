@@ -170,10 +170,23 @@ export default function Board() {
       <Modal 
         isOpen={isModalOpen}
         onClose={() => { setIsModalOpen(false); setNewColumnTitle(''); }}
-        onConfirm={handleConfirmAddColumn}
-        value={newColumnTitle}
-        onChange={setNewColumnTitle}
-      />
+        title="Add new column"
+      >
+        <input 
+          value={newColumnTitle} 
+          onChange={(e) => setNewColumnTitle(e.target.value)} 
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleConfirmAddColumn();
+            if (e.key === 'Escape') { setIsModalOpen(false); setNewColumnTitle(''); }
+          }}
+          placeholder="Column title..." 
+          autoFocus
+        />
+        <div className="modal-actions">
+          <button onClick={() => { setIsModalOpen(false); setNewColumnTitle(''); }} className="btn-cancel">Cancel</button>
+          <button onClick={handleConfirmAddColumn} className="btn-primary">Add</button>
+        </div>
+      </Modal>
     </>
   );
 }
