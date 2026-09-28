@@ -14,35 +14,35 @@ export default function Board() {
   const handleConfirmAddColumn = () => {
     if (newColumnTitle.trim()) {
       const newColumn = { id: Date.now(), title: newColumnTitle.trim(), todos: [] };
-      setColumns([...columns, newColumn]);
+      setColumns(prev => [...prev, newColumn]);
       setIsModalOpen(false);
       setNewColumnTitle('');
     }
   };
 
   const handleDeleteColumn = (columnId) => {
-    setColumns(columns.filter(col => col.id !== columnId));
+    setColumns(prev => prev.filter(col => col.id !== columnId));
   };
 
   const handleEditColumnTitle = (columnId, newTitle) => {
-    setColumns(columns.map(col => col.id === columnId ? { ...col, title: newTitle } : col));
+    setColumns(prev => prev.map(col => col.id === columnId ? { ...col, title: newTitle } : col));
   };
 
   const handleAddTodo = (columnId, text) => {
     const newTodo = { id: Date.now(), text, isCompleted: false, isSelected: false };
-    setColumns(columns.map(col => 
+    setColumns(prev => prev.map(col => 
       col.id === columnId ? { ...col, todos: [...col.todos, newTodo] } : col
     ));
   };
 
   const handleDeleteTodo = (columnId, todoId) => {
-    setColumns(columns.map(col => 
+    setColumns(prev => prev.map(col => 
       col.id === columnId ? { ...col, todos: col.todos.filter(todo => todo.id !== todoId) } : col
     ));
   };
 
   const handleEditTodo = (columnId, todoId, newText) => {
-    setColumns(columns.map(col => 
+    setColumns(prev => prev.map(col => 
       col.id === columnId
         ? { ...col, todos: col.todos.map(todo => todo.id === todoId ? { ...todo, text: newText } : todo) }
         : col
@@ -50,7 +50,7 @@ export default function Board() {
   };
 
   const handleToggleSelect = (columnId, todoId) => {
-    setColumns(columns.map(col => 
+    setColumns(prev => prev.map(col => 
       col.id === columnId
         ? { ...col, todos: col.todos.map(todo => todo.id === todoId ? { ...todo, isSelected: !todo.isSelected } : todo) }
         : col
@@ -58,7 +58,7 @@ export default function Board() {
   };
 
   const handleToggleComplete = (columnId, todoId) => {
-    setColumns(columns.map(col => 
+    setColumns(prev => prev.map(col => 
       col.id === columnId
         ? { ...col, todos: col.todos.map(todo => todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo) }
         : col
@@ -66,7 +66,7 @@ export default function Board() {
   };
 
   const handleSelectAllInColumn = (columnId, visibleIds, selectAll) => {
-    setColumns(columns.map(col => 
+    setColumns(prev => prev.map(col => 
       col.id === columnId ? { ...col, todos: col.todos.map(todo => visibleIds.includes(todo.id) ? { ...todo, isSelected: selectAll } : todo) } : col
     ));
   };
@@ -74,19 +74,19 @@ export default function Board() {
   const selectedCount = columns.reduce((total, col) => total + col.todos.filter(t => t.isSelected).length, 0);
 
   const handleClearSelection = () => {
-    setColumns(columns.map(col => ({ ...col, todos: col.todos.map(t => ({ ...t, isSelected: false })) })));
+    setColumns(prev => prev.map(col => ({ ...col, todos: col.todos.map(t => ({ ...t, isSelected: false })) })));
   };
 
   const handleBulkMarkComplete = () => {
-    setColumns(columns.map(col => ({ ...col, todos: col.todos.map(t => t.isSelected ? { ...t, isCompleted: true } : t) })));
+    setColumns(prev => prev.map(col => ({ ...col, todos: col.todos.map(t => t.isSelected ? { ...t, isCompleted: true } : t) })));
   };
 
   const handleBulkMarkIncomplete = () => {
-    setColumns(columns.map(col => ({ ...col, todos: col.todos.map(t => t.isSelected ? { ...t, isCompleted: false } : t) })));
+    setColumns(prev => prev.map(col => ({ ...col, todos: col.todos.map(t => t.isSelected ? { ...t, isCompleted: false } : t) })));
   };
 
   const handleBulkDelete = () => {
-    setColumns(columns.map(col => ({ ...col, todos: col.todos.filter(t => !t.isSelected) })));
+    setColumns(prev => prev.map(col => ({ ...col, todos: col.todos.filter(t => !t.isSelected) })));
   };
 
   const handleBulkMove = (e) => {
