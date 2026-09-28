@@ -11,7 +11,7 @@ export default function Navbar({ globalSearch, setGlobalSearch, filterType, setF
         </div>
         
         <div className="search-wrapper">
-          <span className="search-custom-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span className="search-custom-icon">
             <SearchIcon size={16} color="#64748B" />
           </span>
           
