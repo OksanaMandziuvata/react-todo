@@ -168,7 +168,7 @@ export default function Board() {
 
       <Modal 
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => { setIsModalOpen(false); setNewColumnTitle(''); }}
         onConfirm={handleConfirmAddColumn}
         value={newColumnTitle}
         onChange={setNewColumnTitle}
