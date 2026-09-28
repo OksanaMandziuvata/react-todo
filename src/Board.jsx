@@ -86,7 +86,15 @@ export default function Board() {
   };
 
   const handleBulkDelete = () => {
-    setColumns(prev => prev.map(col => ({ ...col, todos: col.todos.filter(t => !t.isSelected) })));
+    setColumns(prev => prev.map(col => ({ 
+      ...col, 
+      todos: col.todos.filter(t => {
+        const matchesSearch = t.text.toLowerCase().includes(globalSearch.toLowerCase());
+        const matchesFilter = filterType === 'All' 
+            ? true : filterType === 'Completed' ? t.isCompleted : !t.isCompleted;
+        return !(t.isSelected && matchesSearch && matchesFilter);
+      }) 
+    })));
   };
 
   const handleBulkMove = (e) => {
