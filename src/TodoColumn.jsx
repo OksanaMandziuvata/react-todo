@@ -34,8 +34,8 @@ export default function TodoColumn({
         title={title}
         todosCount={todos.length}
         completedCount={completedCount}
-        onEditColumnTitle={onEditColumnTitle}
-        onDeleteColumn={onDeleteColumn}
+        onEditColumnTitle={(newTitle) => onEditColumnTitle(columnId, newTitle)}
+        onDeleteColumn={() => onDeleteColumn(columnId)}
       />
 
       <div className="select-all-row">
@@ -62,7 +62,7 @@ export default function TodoColumn({
         ))}
       </ul>
 
-      <ColumnFooter onAddTodo={onAddTodo} />
+      <ColumnFooter onAddTodo={(text) => onAddTodo(columnId, text)} />
     </div>
   );
 }

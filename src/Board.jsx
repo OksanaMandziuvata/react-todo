@@ -154,14 +154,14 @@ export default function Board() {
               todos={column.todos}
               globalSearchQuery={globalSearch}
               filterType={filterType}
-              onAddTodo={(text) => handleAddTodo(column.id, text)}
+              onAddTodo={handleAddTodo}
               onDeleteTodo={handleDeleteTodo}
               onEditTodo={handleEditTodo}
               onToggleSelect={handleToggleSelect}
               onToggleComplete={handleToggleComplete} 
               onSelectAllInColumn={handleSelectAllInColumn}
-              onEditColumnTitle={(newTitle) => handleEditColumnTitle(column.id, newTitle)}
-              onDeleteColumn={() => handleDeleteColumn(column.id)}
+              onEditColumnTitle={handleEditColumnTitle}
+              onDeleteColumn={handleDeleteColumn}
             />
           ))
         )}
