@@ -1,6 +1,7 @@
 import ColumnHeader from './ColumnHeader';
 import ColumnFooter from './ColumnFooter';
 import TodoItem from './TodoItem';
+import { FILTER_TYPES } from './constants';
 
 export default function TodoColumn({
   columnId,
@@ -19,8 +20,8 @@ export default function TodoColumn({
 }) {
   const filteredTodos = todos.filter(todo => {
     const matchesSearch = todo.text.toLowerCase().includes(globalSearchQuery.toLowerCase());
-    const matchesFilter = filterType === 'All' 
-        ? true : filterType === 'Completed' ? todo.isCompleted : !todo.isCompleted;
+    const matchesFilter = filterType === FILTER_TYPES.ALL 
+        ? true : filterType === FILTER_TYPES.COMPLETED ? todo.isCompleted : !todo.isCompleted;
     return matchesSearch && matchesFilter;
   });
 

@@ -3,11 +3,12 @@ import Navbar from './Navbar';
 import BulkActionsBar from './BulkActionsBar';
 import TodoColumn from './TodoColumn';
 import Modal from './Modal';
+import { FILTER_TYPES } from './constants';
 
 export default function Board() {
   const [columns, setColumns] = useState([]);
   const [globalSearch, setGlobalSearch] = useState('');
-  const [filterType, setFilterType] = useState('All'); 
+  const [filterType, setFilterType] = useState(FILTER_TYPES.ALL); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newColumnTitle, setNewColumnTitle] = useState('');
 
@@ -90,8 +91,8 @@ export default function Board() {
       ...col, 
       todos: col.todos.filter(t => {
         const matchesSearch = t.text.toLowerCase().includes(globalSearch.toLowerCase());
-        const matchesFilter = filterType === 'All' 
-            ? true : filterType === 'Completed' ? t.isCompleted : !t.isCompleted;
+        const matchesFilter = filterType === FILTER_TYPES.ALL 
+            ? true : filterType === FILTER_TYPES.COMPLETED ? t.isCompleted : !t.isCompleted;
         return !(t.isSelected && matchesSearch && matchesFilter);
       }) 
     })));
