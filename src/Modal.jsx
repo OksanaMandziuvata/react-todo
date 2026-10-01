@@ -1,3 +1,4 @@
+
 export default function Modal({ 
   isOpen, 
   onClose, 
@@ -12,6 +13,8 @@ export default function Modal({
   errorMessage = "Invalid input",
   children
 }) {
+
+
   if (!isOpen) return null;
 
   const handleKeyDown = (e) => {
