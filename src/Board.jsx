@@ -11,9 +11,12 @@ export default function Board() {
   const [filterType, setFilterType] = useState(FILTER_TYPES.ALL); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newColumnTitle, setNewColumnTitle] = useState('');
+  const [deleteConfig, setDeleteConfig] = useState({ isOpen: false, action: null, message: '' });
+
+  const isColumnTitleValid = newColumnTitle.trim().length >= 3;
 
   const handleConfirmAddColumn = () => {
-    if (newColumnTitle.trim()) {
+    if (isColumnTitleValid) {
       const newColumn = { id: Date.now(), title: newColumnTitle.trim(), todos: [] };
       setColumns(prev => [...prev, newColumn]);
       setIsModalOpen(false);
@@ -21,8 +24,27 @@ export default function Board() {
     }
   };
 
+  const promptDelete = (action, message = "Are you sure you want to delete?") => {
+    setDeleteConfig({ isOpen: true, action, message });
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfig.action) deleteConfig.action();
+    setDeleteConfig({ isOpen: false, action: null, message: '' });
+  };
+
   const handleDeleteColumn = (columnId) => {
-    setColumns(prev => prev.filter(col => col.id !== columnId));
+    promptDelete(() => setColumns(prev => prev.filter(col => col.id !== columnId)));
+  };
+
+  const handleDeleteTodo = (columnId, todoId) => {
+    promptDelete(() => setColumns(prev => prev.map(col => 
+      col.id === columnId ? { ...col, todos: col.todos.filter(todo => todo.id !== todoId) } : col
+    )));
+  };
+
+  const handleBulkDelete = () => {
+    promptDelete(() => setColumns(prev => prev.map(col => ({ ...col, todos: col.todos.filter(t => !t.isSelected) }))));
   };
 
   const handleEditColumnTitle = (columnId, newTitle) => {
@@ -33,12 +55,6 @@ export default function Board() {
     const newTodo = { id: Date.now(), text, isCompleted: false, isSelected: false };
     setColumns(prev => prev.map(col => 
       col.id === columnId ? { ...col, todos: [...col.todos, newTodo] } : col
-    ));
-  };
-
-  const handleDeleteTodo = (columnId, todoId) => {
-    setColumns(prev => prev.map(col => 
-      col.id === columnId ? { ...col, todos: col.todos.filter(todo => todo.id !== todoId) } : col
     ));
   };
 
@@ -84,18 +100,6 @@ export default function Board() {
 
   const handleBulkMarkIncomplete = () => {
     setColumns(prev => prev.map(col => ({ ...col, todos: col.todos.map(t => t.isSelected ? { ...t, isCompleted: false } : t) })));
-  };
-
-  const handleBulkDelete = () => {
-    setColumns(prev => prev.map(col => ({ 
-      ...col, 
-      todos: col.todos.filter(t => {
-        const matchesSearch = t.text.toLowerCase().includes(globalSearch.toLowerCase());
-        const matchesFilter = filterType === FILTER_TYPES.ALL 
-            ? true : filterType === FILTER_TYPES.COMPLETED ? t.isCompleted : !t.isCompleted;
-        return !(t.isSelected && matchesSearch && matchesFilter);
-      }) 
-    })));
   };
 
   const handleBulkMove = (e) => {
@@ -170,23 +174,26 @@ export default function Board() {
       <Modal 
         isOpen={isModalOpen}
         onClose={() => { setIsModalOpen(false); setNewColumnTitle(''); }}
+        onConfirm={handleConfirmAddColumn}
         title="Add new column"
-      >
-        <input 
-          value={newColumnTitle} 
-          onChange={(e) => setNewColumnTitle(e.target.value)} 
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') handleConfirmAddColumn();
-            if (e.key === 'Escape') { setIsModalOpen(false); setNewColumnTitle(''); }
-          }}
-          placeholder="Column title..." 
-          autoFocus
-        />
-        <div className="modal-actions">
-          <button onClick={() => { setIsModalOpen(false); setNewColumnTitle(''); }} className="btn-cancel">Cancel</button>
-          <button onClick={handleConfirmAddColumn} className="btn-primary">Add</button>
-        </div>
-      </Modal>
+        mode="input"
+        value={newColumnTitle}
+        onChange={setNewColumnTitle}
+        isValid={isColumnTitleValid}
+        errorMessage="Title must be at least 3 characters long."
+        confirmText="Add"
+      />
+
+      <Modal 
+        isOpen={deleteConfig.isOpen}
+        onClose={() => setDeleteConfig({ isOpen: false, action: null, message: '' })}
+        onConfirm={confirmDelete}
+        title="Confirm Deletion"
+        mode="confirm"
+        message={deleteConfig.message}
+        isValid={true}
+        confirmText="Delete"
+      />
     </>
   );
 }
