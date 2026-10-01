@@ -9,7 +9,8 @@ export default function Modal({
   message = "", 
   confirmText = "Add", 
   isValid = true, 
-  errorMessage = "Invalid input" 
+  errorMessage = "Invalid input",
+  children
 }) {
   if (!isOpen) return null;
 
@@ -21,8 +22,9 @@ export default function Modal({
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <h3>{title}</h3>
-        
+        {title && <h3>{title}</h3>}
+        {children}
+       
         {mode === "input" && (
           <>
             <input 

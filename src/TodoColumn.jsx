@@ -1,6 +1,7 @@
 import ColumnHeader from './ColumnHeader';
 import ColumnFooter from './ColumnFooter';
 import TodoItem from './TodoItem';
+import { FILTER_TYPES } from './constants';
 
 export default function TodoColumn({
   columnId,
@@ -19,12 +20,12 @@ export default function TodoColumn({
 }) {
   const filteredTodos = todos.filter(todo => {
     const matchesSearch = todo.text.toLowerCase().includes(globalSearchQuery.toLowerCase());
-    const matchesFilter = filterType === 'All' 
-        ? true : filterType === 'Completed' ? todo.isCompleted : !todo.isCompleted;
+    const matchesFilter = filterType === FILTER_TYPES.ALL 
+        ? true : filterType === FILTER_TYPES.COMPLETED ? todo.isCompleted : !todo.isCompleted;
     return matchesSearch && matchesFilter;
   });
 
-  const areAllSelected = todos.length > 0 && todos.every(todo => todo.isSelected);
+  const areAllSelected = filteredTodos.length > 0 && filteredTodos.every(todo => todo.isSelected);
   const completedCount = todos.filter(t => t.isCompleted).length;
 
   return (
@@ -33,8 +34,8 @@ export default function TodoColumn({
         title={title}
         todosCount={todos.length}
         completedCount={completedCount}
-        onEditColumnTitle={onEditColumnTitle}
-        onDeleteColumn={onDeleteColumn}
+        onEditColumnTitle={(newTitle) => onEditColumnTitle(columnId, newTitle)}
+        onDeleteColumn={() => onDeleteColumn(columnId)}
       />
 
       <div className="select-all-row">
@@ -42,7 +43,7 @@ export default function TodoColumn({
             type="checkbox" 
             className="todo-checkbox select-checkbox"
             checked={areAllSelected}
-            onChange={(e) => onSelectAllInColumn(columnId, e.target.checked)}
+            onChange={(e) => onSelectAllInColumn(columnId, filteredTodos.map(t => t.id), e.target.checked)}
         />
         <span>Select all</span>
       </div>
@@ -61,7 +62,7 @@ export default function TodoColumn({
         ))}
       </ul>
 
-      <ColumnFooter onAddTodo={onAddTodo} />
+      <ColumnFooter onAddTodo={(text) => onAddTodo(columnId, text)} />
     </div>
   );
 }

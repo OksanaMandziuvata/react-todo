@@ -1,5 +1,6 @@
 import GridIcon from './assets/GridIcon';
 import SearchIcon from './assets/SearchIcon';
+import { FILTER_TYPES } from './constants';
 
 export default function Navbar({ globalSearch, setGlobalSearch, filterType, setFilterType, onOpenModal }) {
   return (
@@ -11,7 +12,7 @@ export default function Navbar({ globalSearch, setGlobalSearch, filterType, setF
         </div>
         
         <div className="search-wrapper">
-          <span className="search-custom-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span className="search-custom-icon">
             <SearchIcon size={16} color="#64748B" />
           </span>
           
@@ -24,9 +25,9 @@ export default function Navbar({ globalSearch, setGlobalSearch, filterType, setF
         </div>
 
         <div className="toolbar-filters">
-            <button className={`filter-btn ${filterType === 'All' ? 'active' : ''}`} onClick={() => setFilterType('All')}>All</button>
-            <button className={`filter-btn ${filterType === 'Incomplete' ? 'active' : ''}`} onClick={() => setFilterType('Incomplete')}>Incomplete</button>
-            <button className={`filter-btn ${filterType === 'Completed' ? 'active' : ''}`} onClick={() => setFilterType('Completed')}>Completed</button>
+            <button className={`filter-btn ${filterType === FILTER_TYPES.ALL ? 'active' : ''}`} onClick={() => setFilterType(FILTER_TYPES.ALL)}>All</button>
+            <button className={`filter-btn ${filterType === FILTER_TYPES.INCOMPLETE ? 'active' : ''}`} onClick={() => setFilterType(FILTER_TYPES.INCOMPLETE)}>Incomplete</button>
+            <button className={`filter-btn ${filterType === FILTER_TYPES.COMPLETED ? 'active' : ''}`} onClick={() => setFilterType(FILTER_TYPES.COMPLETED)}>Completed</button>
         </div>
       </div>
       <div className="toolbar-actions">

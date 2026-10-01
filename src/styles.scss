@@ -595,6 +595,24 @@ body {
     }
   }
 }
+.empty-board-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: #64748b;
+  margin-top: 40px;
+
+  h3 {
+    margin: 0 0 8px 0;
+    color: #818cf8;
+  }
+
+  p {
+    margin: 0;
+  }
+}
 
 .btn-primary:disabled,
 .btn-add-circle:disabled {

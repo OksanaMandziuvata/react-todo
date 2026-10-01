@@ -3,11 +3,12 @@ import Navbar from './Navbar';
 import BulkActionsBar from './BulkActionsBar';
 import TodoColumn from './TodoColumn';
 import Modal from './Modal';
+import { FILTER_TYPES } from './constants';
 
 export default function Board() {
   const [columns, setColumns] = useState([]);
   const [globalSearch, setGlobalSearch] = useState('');
-  const [filterType, setFilterType] = useState('All'); 
+  const [filterType, setFilterType] = useState(FILTER_TYPES.ALL); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newColumnTitle, setNewColumnTitle] = useState('');
   const [deleteConfig, setDeleteConfig] = useState({ isOpen: false, action: null, message: '' });
@@ -17,7 +18,7 @@ export default function Board() {
   const handleConfirmAddColumn = () => {
     if (isColumnTitleValid) {
       const newColumn = { id: Date.now(), title: newColumnTitle.trim(), todos: [] };
-      setColumns([...columns, newColumn]);
+      setColumns(prev => [...prev, newColumn]);
       setIsModalOpen(false);
       setNewColumnTitle('');
     }
@@ -47,18 +48,18 @@ export default function Board() {
   };
 
   const handleEditColumnTitle = (columnId, newTitle) => {
-    setColumns(columns.map(col => col.id === columnId ? { ...col, title: newTitle } : col));
+    setColumns(prev => prev.map(col => col.id === columnId ? { ...col, title: newTitle } : col));
   };
 
   const handleAddTodo = (columnId, text) => {
     const newTodo = { id: Date.now(), text, isCompleted: false, isSelected: false };
-    setColumns(columns.map(col => 
+    setColumns(prev => prev.map(col => 
       col.id === columnId ? { ...col, todos: [...col.todos, newTodo] } : col
     ));
   };
 
   const handleEditTodo = (columnId, todoId, newText) => {
-    setColumns(columns.map(col => 
+    setColumns(prev => prev.map(col => 
       col.id === columnId
         ? { ...col, todos: col.todos.map(todo => todo.id === todoId ? { ...todo, text: newText } : todo) }
         : col
@@ -66,7 +67,7 @@ export default function Board() {
   };
 
   const handleToggleSelect = (columnId, todoId) => {
-    setColumns(columns.map(col => 
+    setColumns(prev => prev.map(col => 
       col.id === columnId
         ? { ...col, todos: col.todos.map(todo => todo.id === todoId ? { ...todo, isSelected: !todo.isSelected } : todo) }
         : col
@@ -74,31 +75,31 @@ export default function Board() {
   };
 
   const handleToggleComplete = (columnId, todoId) => {
-    setColumns(columns.map(col => 
+    setColumns(prev => prev.map(col => 
       col.id === columnId
         ? { ...col, todos: col.todos.map(todo => todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo) }
         : col
     ));
   };
 
-  const handleSelectAllInColumn = (columnId, selectAll) => {
-    setColumns(columns.map(col => 
-      col.id === columnId ? { ...col, todos: col.todos.map(todo => ({ ...todo, isSelected: selectAll })) } : col
+  const handleSelectAllInColumn = (columnId, visibleIds, selectAll) => {
+    setColumns(prev => prev.map(col => 
+      col.id === columnId ? { ...col, todos: col.todos.map(todo => visibleIds.includes(todo.id) ? { ...todo, isSelected: selectAll } : todo) } : col
     ));
   };
 
   const selectedCount = columns.reduce((total, col) => total + col.todos.filter(t => t.isSelected).length, 0);
 
   const handleClearSelection = () => {
-    setColumns(columns.map(col => ({ ...col, todos: col.todos.map(t => ({ ...t, isSelected: false })) })));
+    setColumns(prev => prev.map(col => ({ ...col, todos: col.todos.map(t => ({ ...t, isSelected: false })) })));
   };
 
   const handleBulkMarkComplete = () => {
-    setColumns(columns.map(col => ({ ...col, todos: col.todos.map(t => t.isSelected ? { ...t, isCompleted: true } : t) })));
+    setColumns(prev => prev.map(col => ({ ...col, todos: col.todos.map(t => t.isSelected ? { ...t, isCompleted: true } : t) })));
   };
 
   const handleBulkMarkIncomplete = () => {
-    setColumns(columns.map(col => ({ ...col, todos: col.todos.map(t => t.isSelected ? { ...t, isCompleted: false } : t) })));
+    setColumns(prev => prev.map(col => ({ ...col, todos: col.todos.map(t => t.isSelected ? { ...t, isCompleted: false } : t) })));
   };
 
   const handleBulkMove = (e) => {
@@ -143,24 +144,31 @@ export default function Board() {
       />
       
       <div className="columns-container">
-        {columns.map(column => (
-          <TodoColumn
-            key={column.id}
-            columnId={column.id}
-            title={column.title}
-            todos={column.todos}
-            globalSearchQuery={globalSearch}
-            filterType={filterType}
-            onAddTodo={(text) => handleAddTodo(column.id, text)}
-            onDeleteTodo={handleDeleteTodo}
-            onEditTodo={handleEditTodo}
-            onToggleSelect={handleToggleSelect}
-            onToggleComplete={handleToggleComplete} 
-            onSelectAllInColumn={handleSelectAllInColumn}
-            onEditColumnTitle={(newTitle) => handleEditColumnTitle(column.id, newTitle)}
-            onDeleteColumn={() => handleDeleteColumn(column.id)}
-          />
-        ))}
+        {columns.length === 0 ? (
+          <div className="empty-board-message">
+            <h3>Your board is empty</h3>
+            <p>Click "+ Add Column" in the top right to get started.</p>
+          </div>
+        ) : (
+          columns.map(column => (
+            <TodoColumn
+              key={column.id}
+              columnId={column.id}
+              title={column.title}
+              todos={column.todos}
+              globalSearchQuery={globalSearch}
+              filterType={filterType}
+              onAddTodo={handleAddTodo}
+              onDeleteTodo={handleDeleteTodo}
+              onEditTodo={handleEditTodo}
+              onToggleSelect={handleToggleSelect}
+              onToggleComplete={handleToggleComplete} 
+              onSelectAllInColumn={handleSelectAllInColumn}
+              onEditColumnTitle={handleEditColumnTitle}
+              onDeleteColumn={handleDeleteColumn}
+            />
+          ))
+        )}
       </div>
 
       <Modal 

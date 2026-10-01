@@ -33,6 +33,8 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
           checked={todo.isSelected} 
           onChange={() => onToggleSelect(columnId, todo.id)} 
           className="todo-checkbox select-checkbox"
+          title="Select task"
+          aria-label="Select task"
         />
         
         <span className="drag-handle">
@@ -44,6 +46,8 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
           checked={todo.isCompleted} 
           onChange={() => onToggleComplete(columnId, todo.id)} 
           className="todo-checkbox complete-checkbox"
+          title={todo.isCompleted ? "Mark as incomplete" : "Mark as complete"}
+          aria-label={todo.isCompleted ? "Mark as incomplete" : "Mark as complete"}
         />
         
         {isEditing ? (
