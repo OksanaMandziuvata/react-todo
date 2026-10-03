@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { DndContext, PointerSensor, useSensor, useSensors, closestCorners } from '@dnd-kit/core';
+import { arrayMove } from '@dnd-kit/sortable';
 import Navbar from './Navbar';
 import BulkActionsBar from './BulkActionsBar';
 import TodoColumn from './TodoColumn';
@@ -15,9 +17,72 @@ export default function Board() {
 
   const isColumnTitleValid = newColumnTitle.trim().length >= 3;
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  );
+
+  const findColumnByTodoId = (id) => columns.find(col => col.todos.some(t => t.id.toString() === id.toString()));
+
+  const handleDragOver = ({ active, over }) => {
+    if (!over) return;
+    const activeId = active.id.toString();
+    const overId = over.id.toString();
+
+    if (activeId === overId) return;
+
+    const activeColumn = findColumnByTodoId(activeId);
+    const overColumn = findColumnByTodoId(overId) || columns.find(c => c.id.toString() === overId);
+
+    if (!activeColumn || !overColumn || activeColumn.id === overColumn.id) return;
+
+    setColumns(prev => {
+      const activeItems = activeColumn.todos;
+      const overItems = overColumn.todos;
+      const activeIndex = activeItems.findIndex(t => t.id.toString() === activeId);
+      const overIndex = overItems.findIndex(t => t.id.toString() === overId);
+
+      const newIndex = overIndex >= 0 ? overIndex : overItems.length;
+
+      return prev.map(col => {
+        if (col.id === activeColumn.id) {
+          return { ...col, todos: col.todos.filter(t => t.id.toString() !== activeId) };
+        }
+        if (col.id === overColumn.id) {
+          const newTodos = [...col.todos];
+          newTodos.splice(newIndex, 0, activeItems[activeIndex]);
+          return { ...col, todos: newTodos };
+        }
+        return col;
+      });
+    });
+  };
+
+  const handleDragEnd = ({ active, over }) => {
+    if (!over) return;
+    const activeId = active.id.toString();
+    const overId = over.id.toString();
+
+    const activeColumn = findColumnByTodoId(activeId);
+    const overColumn = findColumnByTodoId(overId) || columns.find(c => c.id.toString() === overId);
+
+    if (!activeColumn || !overColumn || activeColumn.id !== overColumn.id) return;
+
+    const activeIndex = activeColumn.todos.findIndex(t => t.id.toString() === activeId);
+    const overIndex = overColumn.todos.findIndex(t => t.id.toString() === overId);
+
+    if (activeIndex !== overIndex) {
+      setColumns(prev => prev.map(col => {
+        if (col.id === activeColumn.id) {
+          return { ...col, todos: arrayMove(col.todos, activeIndex, overIndex) };
+        }
+        return col;
+      }));
+    }
+  };
+
   const handleConfirmAddColumn = () => {
     if (isColumnTitleValid) {
-      const newColumn = { id: Date.now(), title: newColumnTitle.trim(), todos: [] };
+      const newColumn = { id: Date.now().toString(), title: newColumnTitle.trim(), todos: [] };
       setColumns(prev => [...prev, newColumn]);
       setIsModalOpen(false);
       setNewColumnTitle('');
@@ -52,7 +117,8 @@ export default function Board() {
   };
 
   const handleAddTodo = (columnId, text) => {
-    const newTodo = { id: Date.now(), text, isCompleted: false, isSelected: false };
+    // Зберігаємо ID задачі як рядок за допомогою .toString()
+    const newTodo = { id: Date.now().toString(), text, isCompleted: false, isSelected: false };
     setColumns(prev => prev.map(col => 
       col.id === columnId ? { ...col, todos: [...col.todos, newTodo] } : col
     ));
@@ -143,33 +209,40 @@ export default function Board() {
         columns={columns}
       />
       
-      <div className="columns-container">
-        {columns.length === 0 ? (
-          <div className="empty-board-message">
-            <h3>Your board is empty</h3>
-            <p>Click "+ Add Column" in the top right to get started.</p>
-          </div>
-        ) : (
-          columns.map(column => (
-            <TodoColumn
-              key={column.id}
-              columnId={column.id}
-              title={column.title}
-              todos={column.todos}
-              globalSearchQuery={globalSearch}
-              filterType={filterType}
-              onAddTodo={handleAddTodo}
-              onDeleteTodo={handleDeleteTodo}
-              onEditTodo={handleEditTodo}
-              onToggleSelect={handleToggleSelect}
-              onToggleComplete={handleToggleComplete} 
-              onSelectAllInColumn={handleSelectAllInColumn}
-              onEditColumnTitle={handleEditColumnTitle}
-              onDeleteColumn={handleDeleteColumn}
-            />
-          ))
-        )}
-      </div>
+      <DndContext 
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="columns-container">
+          {columns.length === 0 ? (
+            <div className="empty-board-message">
+              <h3>Your board is empty</h3>
+              <p>Click "+ Add Column" in the top right to get started.</p>
+            </div>
+          ) : (
+            columns.map(column => (
+              <TodoColumn
+                key={column.id}
+                columnId={column.id}
+                title={column.title}
+                todos={column.todos}
+                globalSearchQuery={globalSearch}
+                filterType={filterType}
+                onAddTodo={handleAddTodo}
+                onDeleteTodo={handleDeleteTodo}
+                onEditTodo={handleEditTodo}
+                onToggleSelect={handleToggleSelect}
+                onToggleComplete={handleToggleComplete} 
+                onSelectAllInColumn={handleSelectAllInColumn}
+                onEditColumnTitle={handleEditColumnTitle}
+                onDeleteColumn={handleDeleteColumn}
+              />
+            ))
+          )}
+        </div>
+      </DndContext>
 
       <Modal 
         isOpen={isModalOpen}
