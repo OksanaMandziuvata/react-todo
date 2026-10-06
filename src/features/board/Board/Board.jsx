@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { DndContext, PointerSensor, useSensor, useSensors, closestCorners } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
-import Navbar from './Navbar';
-import BulkActionsBar from './BulkActionsBar';
-import TodoColumn from './TodoColumn';
-import Modal from './Modal';
-import { FILTER_TYPES } from './constants';
+import Navbar from '../../../shared/ui/Navbar/Navbar';
+import BulkActionsBar from '../../../shared/ui/BulkActionsBar/BulkActionsBar';
+import TodoColumn from '../TodoColumn/TodoColumn';
+import Modal from '../../../shared/ui/Modal/Modal';
+import { FILTER_TYPES } from '../constants';
+import './Board.scss';
 
 export default function Board() {
   const [columns, setColumns] = useState([]);
@@ -117,7 +118,6 @@ export default function Board() {
   };
 
   const handleAddTodo = (columnId, text) => {
-    // Зберігаємо ID задачі як рядок за допомогою .toString()
     const newTodo = { id: Date.now().toString(), text, isCompleted: false, isSelected: false };
     setColumns(prev => prev.map(col => 
       col.id === columnId ? { ...col, todos: [...col.todos, newTodo] } : col
@@ -244,7 +244,7 @@ export default function Board() {
         </div>
       </DndContext>
 
-      <Modal 
+      <Modal
         isOpen={isModalOpen}
         onClose={() => { setIsModalOpen(false); setNewColumnTitle(''); }}
         onConfirm={handleConfirmAddColumn}
@@ -257,7 +257,7 @@ export default function Board() {
         confirmText="Add"
       />
 
-      <Modal 
+      <Modal
         isOpen={deleteConfig.isOpen}
         onClose={() => setDeleteConfig({ isOpen: false, action: null, message: '' })}
         onConfirm={confirmDelete}
