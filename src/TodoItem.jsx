@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import EditIcon from './assets/EditIcon';
 import TrashIcon from './assets/TrashIcon';
 import DragIcon from './assets/DragIcon';
@@ -7,6 +9,14 @@ import CheckIcon from './assets/CheckIcon';
 export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onToggleSelect, onToggleComplete }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(todo.text);
+
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: todo.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : 1,
+  };
 
   const isValid = editText.trim().length >= 3;
 
@@ -26,7 +36,11 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
   };
 
   return (
-    <li className={`todo-item ${todo.isSelected ? 'selected' : ''}`}>
+    <li 
+      ref={setNodeRef} 
+      style={style} 
+      className={`todo-item ${todo.isSelected ? 'selected' : ''}`}
+    >
       <div className="todo-item-left">
         <input 
           type="checkbox" 
@@ -37,7 +51,12 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
           aria-label="Select task"
         />
         
-        <span className="drag-handle">
+        <span 
+          className="drag-handle"
+          {...attributes} 
+          {...listeners}
+          style={{ cursor: 'grab' }}
+        >
           <DragIcon size={14} color="#64748B" />
         </span>
         

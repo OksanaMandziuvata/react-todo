@@ -1,3 +1,5 @@
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { useDroppable } from '@dnd-kit/core';
 import ColumnHeader from './ColumnHeader';
 import ColumnFooter from './ColumnFooter';
 import TodoItem from './TodoItem';
@@ -18,6 +20,8 @@ export default function TodoColumn({
   onEditColumnTitle,
   onDeleteColumn
 }) {
+  const { setNodeRef } = useDroppable({ id: columnId });
+
   const filteredTodos = todos.filter(todo => {
     const matchesSearch = todo.text.toLowerCase().includes(globalSearchQuery.toLowerCase());
     const matchesFilter = filterType === FILTER_TYPES.ALL 
@@ -29,7 +33,7 @@ export default function TodoColumn({
   const completedCount = todos.filter(t => t.isCompleted).length;
 
   return (
-    <div className="todo-column">
+    <div className="todo-column" ref={setNodeRef}>
       <ColumnHeader 
         title={title}
         todosCount={todos.length}
@@ -49,17 +53,19 @@ export default function TodoColumn({
       </div>
 
       <ul className="todo-list">
-        {filteredTodos.map((todo) => (
-          <TodoItem
-            key={todo.id}
-            todo={todo}
-            columnId={columnId}
-            onDeleteTodo={onDeleteTodo}
-            onEditTodo={onEditTodo}
-            onToggleSelect={onToggleSelect}
-            onToggleComplete={onToggleComplete}
-          />
-        ))}
+        <SortableContext items={filteredTodos.map(t => t.id)} strategy={verticalListSortingStrategy}>
+          {filteredTodos.map((todo) => (
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              columnId={columnId}
+              onDeleteTodo={onDeleteTodo}
+              onEditTodo={onEditTodo}
+              onToggleSelect={onToggleSelect}
+              onToggleComplete={onToggleComplete}
+            />
+          ))}
+        </SortableContext>
       </ul>
 
       <ColumnFooter onAddTodo={(text) => onAddTodo(columnId, text)} />
