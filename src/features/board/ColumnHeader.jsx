@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import DragIcon from './assets/DragIcon';
-import EditIcon from './assets/EditIcon';
-import CloseIcon from './assets/CloseIcon';
-import CheckIcon from './assets/CheckIcon';
+import DragIcon from '../../assets/DragIcon';
+import EditIcon from '../../assets/EditIcon';
+import CloseIcon from '../../assets/CloseIcon';
+import CheckIcon from '../../assets/CheckIcon';
 
 export default function ColumnHeader({ title, todosCount, completedCount, onEditColumnTitle, onDeleteColumn }) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);

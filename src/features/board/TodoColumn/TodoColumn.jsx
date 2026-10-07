@@ -1,9 +1,10 @@
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
-import ColumnHeader from './ColumnHeader';
-import ColumnFooter from './ColumnFooter';
-import TodoItem from './TodoItem';
-import { FILTER_TYPES } from './constants';
+import ColumnHeader from '../ColumnHeader';
+import ColumnFooter from '../ColumnFooter';
+import TodoItem from '../TodoItem/TodoItem';
+import { FILTER_TYPES } from '../constants';
+import './TodoColumn.scss';
 
 export default function TodoColumn({
   columnId,
