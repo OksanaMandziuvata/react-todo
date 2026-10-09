@@ -1,3 +1,5 @@
+import './BulkActionsBar.scss';
+
 export default function BulkActionsBar({ 
   selectedCount, 
   onClearSelection, 

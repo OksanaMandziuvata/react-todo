@@ -1,3 +1,4 @@
+import './Modal.scss';
 
 export default function Modal({ 
   isOpen, 

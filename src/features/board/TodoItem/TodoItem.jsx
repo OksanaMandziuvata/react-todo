@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import EditIcon from './assets/EditIcon';
-import TrashIcon from './assets/TrashIcon';
-import DragIcon from './assets/DragIcon';
-import CheckIcon from './assets/CheckIcon';
+import EditIcon from '../../../assets/EditIcon';
+import TrashIcon from '../../../assets/TrashIcon';
+import DragIcon from '../../../assets/DragIcon';
+import CheckIcon from '../../../assets/CheckIcon';
+import './TodoItem.scss';
 
 export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onToggleSelect, onToggleComplete }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -52,10 +53,9 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
         />
         
         <span 
-          className="drag-handle"
+          className="drag-handle todo-item-drag-handle"
           {...attributes} 
           {...listeners}
-          style={{ cursor: 'grab' }}
         >
           <DragIcon size={14} color="#64748B" />
         </span>
@@ -70,7 +70,7 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
         />
         
         {isEditing ? (
-          <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+          <div className="edit-todo-container">
             <input 
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
@@ -78,7 +78,7 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
               autoFocus
               className="edit-todo-input"
             />
-            {!isValid && editText.length > 0 && <span className="error-text-inline" style={{padding: '4px 0 0'}}>Minimum 3 chars</span>}
+            {!isValid && editText.length > 0 && <span className="error-text-inline error-text-padding">Minimum 3 chars</span>}
           </div>
         ) : (
           <span className={todo.isCompleted ? 'completed-text' : 'todo-text-content'}>
