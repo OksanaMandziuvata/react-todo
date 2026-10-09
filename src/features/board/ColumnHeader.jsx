@@ -4,7 +4,15 @@ import EditIcon from '../../assets/EditIcon';
 import CloseIcon from '../../assets/CloseIcon';
 import CheckIcon from '../../assets/CheckIcon';
 
-export default function ColumnHeader({ title, todosCount, completedCount, onEditColumnTitle, onDeleteColumn }) {
+export default function ColumnHeader({
+  title,
+  todosCount,
+  completedCount,
+  onEditColumnTitle,
+  onDeleteColumn,
+  dragAttributes,
+  dragListeners,
+}) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleText, setTitleText] = useState(title);
   
@@ -52,7 +60,7 @@ export default function ColumnHeader({ title, todosCount, completedCount, onEdit
       ) : (
         <>
           <div className="column-title-group">
-            <span className="drag-handle">
+            <span className="drag-handle" {...dragAttributes} {...dragListeners}>
               <DragIcon size={14} color="#64748B" />
             </span>
             <h3>{title}</h3>
