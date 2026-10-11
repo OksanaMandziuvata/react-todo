@@ -40,6 +40,7 @@ export default function ColumnHeader({ title, todosCount, completedCount, onEdit
               onClick={handleSaveTitle} 
               className="btn-icon edit-title-btn" 
               disabled={!isTitleValid}
+              ariaLabel="Save column title"
             >
               <img src={CheckIcon} width="14" height="14" alt="" />
             </IconButton>
@@ -58,10 +59,18 @@ export default function ColumnHeader({ title, todosCount, completedCount, onEdit
             <span className="task-count">{completedCount}/{todosCount}</span>
           </div>
           <div className="column-header-actions">
-            <IconButton onClick={() => setIsEditingTitle(true)} className="btn-icon">
+            <IconButton
+              onClick={() => setIsEditingTitle(true)}
+              className="btn-icon"
+              ariaLabel="Edit column"
+            >
               <img src={EditIcon} width="14" height="14" alt="" />
             </IconButton>
-            <IconButton onClick={onDeleteColumn} className="btn-icon btn-delete">
+            <IconButton
+              onClick={onDeleteColumn}
+              className="btn-icon btn-delete"
+              ariaLabel="Delete column"
+            >
               <img src={CloseIcon} width="14" height="14" alt="" />
             </IconButton>
           </div>

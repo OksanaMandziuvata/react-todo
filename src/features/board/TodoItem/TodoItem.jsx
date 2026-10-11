@@ -87,16 +87,29 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
       
       <div className="todo-item-actions">
           {isEditing ? (
-            <IconButton className="btn-icon" onClick={handleSave} disabled={!isValid}>
+            <IconButton
+              className="btn-icon"
+              onClick={handleSave}
+              disabled={!isValid}
+              ariaLabel="Save item"
+            >
               <img src={CheckIcon} width="14" height="14" alt="" />
             </IconButton>
           ) : (
-            <IconButton className="btn-icon" onClick={() => setIsEditing(true)}>
+            <IconButton
+              className="btn-icon"
+              onClick={() => setIsEditing(true)}
+              ariaLabel="Edit item"
+            >
               <img src={EditIcon} width="14" height="14" alt="" />
             </IconButton>
           )}
           
-          <IconButton className="btn-icon btn-delete" onClick={() => onDeleteTodo(columnId, todo.id)}>
+          <IconButton
+            className="btn-icon btn-delete"
+            onClick={() => onDeleteTodo(columnId, todo.id)}
+            ariaLabel="Delete item"
+          >
             <img src={TrashIcon} width="14" height="14" alt="" />
           </IconButton>
       </div>

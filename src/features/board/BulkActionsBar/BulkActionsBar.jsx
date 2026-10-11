@@ -1,4 +1,5 @@
 import Button from '@/shared/ui/Button';
+import IconButton from '@/shared/ui/IconButton';
 import './BulkActionsBar.scss';
 
 export default function BulkActionsBar({ 
@@ -16,7 +17,9 @@ export default function BulkActionsBar({
     <div className="bulk-action-bar">
       <div className="selected-count">
         <span className="count-badge">{selectedCount} selected</span>
-        <Button className="clear-selection" onClick={onClearSelection}>✕</Button>
+        <IconButton className="clear-selection" onClick={onClearSelection} ariaLabel="Clear selected">
+          ✕
+        </IconButton>
       </div>
       <div className="bulk-buttons">
         <Button className="btn-success-text" onClick={onBulkMarkComplete}>Mark complete</Button>
