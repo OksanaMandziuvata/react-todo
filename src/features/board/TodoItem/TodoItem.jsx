@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import EditIcon from '../../../assets/EditIcon';
-import TrashIcon from '../../../assets/TrashIcon';
-import DragIcon from '../../../assets/DragIcon';
-import CheckIcon from '../../../assets/CheckIcon';
+import EditIcon from '@/assets/EditIcon';
+import TrashIcon from '@/assets/TrashIcon';
+import DragIcon from '@/assets/DragIcon';
+import CheckIcon from '@/assets/CheckIcon';
 import './TodoItem.scss';
 
 export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onToggleSelect, onToggleComplete }) {

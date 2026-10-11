@@ -1,5 +1,5 @@
-import GridIcon from '../../../assets/GridIcon';
-import SearchIcon from '../../../assets/SearchIcon';
+import GridIcon from '@/assets/GridIcon';
+import SearchIcon from '@/assets/SearchIcon';
 import { FILTER_TYPES } from '../constants';
 import './Navbar.scss';
 

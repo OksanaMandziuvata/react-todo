@@ -4,7 +4,7 @@ import { arrayMove } from '@dnd-kit/sortable';
 import Navbar from '../Navbar/Navbar';
 import BulkActionsBar from '../BulkActionsBar/BulkActionsBar';
 import TodoColumn from '../TodoColumn/TodoColumn';
-import Modal from '../../../shared/ui/Modal/Modal';
+import Modal from '@/shared/ui/Modal/Modal';
 import { FILTER_TYPES } from '../constants';
 import './Board.scss';
 
