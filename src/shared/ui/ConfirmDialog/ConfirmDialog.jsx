@@ -36,8 +36,8 @@ export default function ConfirmDialog({
         title={title}
         footer={
           <>
-            <Button className="btn-cancel" onClick={onCancel}>{cancelText}</Button>
-            <Button className="btn-primary" onClick={onConfirm}>{confirmText}</Button>
+            <Button variant="secondary" onClick={onCancel}>{cancelText}</Button>
+            <Button variant="primary" onClick={onConfirm}>{confirmText}</Button>
           </>
         }
       >

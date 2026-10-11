@@ -29,7 +29,7 @@ export default function ColumnFooter({ onAddTodo }) {
             placeholder="Add a task..."
             className="todo-input"
           />
-          <Button onClick={handleSubmit} className="btn-add-circle" disabled={!isTextValid}>
+          <Button variant="primary" onClick={handleSubmit} className="btn-add-circle" disabled={!isTextValid}>
             +
           </Button>
         </div>

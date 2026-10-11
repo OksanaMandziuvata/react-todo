@@ -33,7 +33,7 @@ export default function Navbar({ globalSearch, setGlobalSearch, filterType, setF
         />
       </div>
       <div className="toolbar-actions">
-        <Button className="btn-primary" onClick={onOpenModal}>+ Add Column</Button>
+        <Button variant="primary" onClick={onOpenModal}>+ Add Column</Button>
       </div>
     </div>
   );

@@ -264,7 +264,7 @@ export default function Board() {
             footer={
               <>
                 <Button
-                  className="btn-cancel"
+                  variant="secondary"
                   onClick={() => {
                     setIsModalOpen(false);
                     setNewColumnTitle('');
@@ -272,7 +272,7 @@ export default function Board() {
                 >
                   Cancel
                 </Button>
-                <Button className="btn-primary" onClick={handleConfirmAddColumn} disabled={!isColumnTitleValid}>
+                <Button variant="primary" onClick={handleConfirmAddColumn} disabled={!isColumnTitleValid}>
                   Add
                 </Button>
               </>

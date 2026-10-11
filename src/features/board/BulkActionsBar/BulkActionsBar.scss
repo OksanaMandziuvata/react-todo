@@ -42,7 +42,6 @@
     align-items: center;
     gap: 8px;
 
-    button,
     .bulk-move-select {
       box-sizing: border-box;
       display: flex;
@@ -64,26 +63,6 @@
       &:hover {
         color: var(--text-primary);
         border-color: #4a5478;
-      }
-    }
-
-    .btn-success-text {
-      background: rgba(22, 197, 95, 0.12);
-      color: #22c55e;
-
-      &:hover {
-        border-color: #22c55e;
-      }
-    }
-
-    .btn-danger-text {
-      background: rgba(239, 68, 68, 0.12);
-      border: none;
-      color: #ef4444;
-      padding: 5px 12px;
-
-      &:hover {
-        background: rgba(239, 68, 68, 0.2);
       }
     }
 

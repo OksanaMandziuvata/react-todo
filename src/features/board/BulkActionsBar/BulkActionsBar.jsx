@@ -22,15 +22,15 @@ export default function BulkActionsBar({
         </IconButton>
       </div>
       <div className="bulk-buttons">
-        <Button className="btn-success-text" onClick={onBulkMarkComplete}>Mark complete</Button>
-        <Button onClick={onBulkMarkIncomplete}>Mark incomplete</Button>
+        <Button variant="success" onClick={onBulkMarkComplete}>Mark complete</Button>
+        <Button variant="subtle" onClick={onBulkMarkIncomplete}>Mark incomplete</Button>
         
         <select className="bulk-move-select" onChange={onBulkMove} defaultValue="">
           <option value="" disabled>Move to...</option>
           {columns.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
         </select>
         
-        <Button className="btn-danger-text" onClick={onBulkDelete}>Delete</Button>
+        <Button variant="danger" onClick={onBulkDelete}>Delete</Button>
       </div>
     </div>
   );
