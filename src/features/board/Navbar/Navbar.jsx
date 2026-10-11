@@ -1,6 +1,8 @@
-import GridIcon from '@/assets/GridIcon';
-import SearchIcon from '@/assets/SearchIcon';
-import { FILTER_TYPES } from '../constants';
+import Button from '@/shared/ui/Button';
+import SearchInput from '@/shared/ui/SearchInput';
+import SegmentedControl from '@/shared/ui/SegmentedControl';
+import { GridIcon } from '@/shared/ui/icons';
+import { FILTER_TYPES } from '@/features/board/constants';
 import './Navbar.scss';
 
 export default function Navbar({ globalSearch, setGlobalSearch, filterType, setFilterType, onOpenModal }) {
@@ -8,31 +10,30 @@ export default function Navbar({ globalSearch, setGlobalSearch, filterType, setF
     <div className="toolbar">
       <div className="toolbar-left">
         <div className="toolbar-logo">
-          <GridIcon size={22} color="#818CF8" />
+          <img src={GridIcon} width="22" height="22" alt="" />
           <h2>TrelloAlt</h2>
         </div>
         
-        <div className="search-wrapper">
-          <span className="search-custom-icon">
-            <SearchIcon size={16} color="#64748B" />
-          </span>
-          
-          <input 
-            className="global-search-input" 
-            placeholder="Search tasks..." 
-            value={globalSearch}
-            onChange={(e) => setGlobalSearch(e.target.value)}
-          />
-        </div>
+        <SearchInput
+          inputClassName="global-search-input"
+          placeholder="Search tasks..."
+          value={globalSearch}
+          onChange={(e) => setGlobalSearch(e.target.value)}
+        />
 
-        <div className="toolbar-filters">
-            <button className={`filter-btn ${filterType === FILTER_TYPES.ALL ? 'active' : ''}`} onClick={() => setFilterType(FILTER_TYPES.ALL)}>All</button>
-            <button className={`filter-btn ${filterType === FILTER_TYPES.INCOMPLETE ? 'active' : ''}`} onClick={() => setFilterType(FILTER_TYPES.INCOMPLETE)}>Incomplete</button>
-            <button className={`filter-btn ${filterType === FILTER_TYPES.COMPLETED ? 'active' : ''}`} onClick={() => setFilterType(FILTER_TYPES.COMPLETED)}>Completed</button>
-        </div>
+        <SegmentedControl
+          className="toolbar-filters"
+          value={filterType}
+          onChange={setFilterType}
+          options={[
+            { label: 'All', value: FILTER_TYPES.ALL },
+            { label: 'Incomplete', value: FILTER_TYPES.INCOMPLETE },
+            { label: 'Completed', value: FILTER_TYPES.COMPLETED }
+          ]}
+        />
       </div>
       <div className="toolbar-actions">
-        <button className="btn-primary" onClick={onOpenModal}>+ Add Column</button>
+        <Button className="btn-primary" onClick={onOpenModal}>+ Add Column</Button>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import Button from '@/shared/ui/Button';
 import './BulkActionsBar.scss';
 
 export default function BulkActionsBar({ 
@@ -15,18 +16,18 @@ export default function BulkActionsBar({
     <div className="bulk-action-bar">
       <div className="selected-count">
         <span className="count-badge">{selectedCount} selected</span>
-        <button className="clear-selection" onClick={onClearSelection}>✕</button>
+        <Button className="clear-selection" onClick={onClearSelection}>✕</Button>
       </div>
       <div className="bulk-buttons">
-        <button className="btn-success-text" onClick={onBulkMarkComplete}>Mark complete</button>
-        <button onClick={onBulkMarkIncomplete}>Mark incomplete</button>
+        <Button className="btn-success-text" onClick={onBulkMarkComplete}>Mark complete</Button>
+        <Button onClick={onBulkMarkIncomplete}>Mark incomplete</Button>
         
         <select className="bulk-move-select" onChange={onBulkMove} defaultValue="">
           <option value="" disabled>Move to...</option>
           {columns.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
         </select>
         
-        <button className="btn-danger-text" onClick={onBulkDelete}>Delete</button>
+        <Button className="btn-danger-text" onClick={onBulkDelete}>Delete</Button>
       </div>
     </div>
   );

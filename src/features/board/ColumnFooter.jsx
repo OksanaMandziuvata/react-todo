@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import Button from '@/shared/ui/Button';
+import TextInput from '@/shared/ui/TextInput';
 
 export default function ColumnFooter({ onAddTodo }) {
   const [text, setText] = useState('');
@@ -20,16 +22,16 @@ export default function ColumnFooter({ onAddTodo }) {
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <div className="column-footer">
         <div className="todo-form">
-          <input 
+          <TextInput
             value={text} 
             onChange={(e) => setText(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Add a task..."
             className="todo-input"
           />
-          <button onClick={handleSubmit} className="btn-add-circle" disabled={!isTextValid}>
+          <Button onClick={handleSubmit} className="btn-add-circle" disabled={!isTextValid}>
             +
-          </button>
+          </Button>
         </div>
       </div>
       {!isTextValid && text.length > 0 && (

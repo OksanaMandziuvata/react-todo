@@ -1,9 +1,10 @@
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
-import ColumnHeader from '../ColumnHeader';
-import ColumnFooter from '../ColumnFooter';
-import TodoItem from '../TodoItem/TodoItem';
-import { FILTER_TYPES } from '../constants';
+import Checkbox from '@/shared/ui/Checkbox';
+import ColumnHeader from '@/features/board/ColumnHeader';
+import ColumnFooter from '@/features/board/ColumnFooter';
+import TodoItem from '@/features/board/TodoItem/TodoItem';
+import { FILTER_TYPES } from '@/features/board/constants';
 import './TodoColumn.scss';
 
 export default function TodoColumn({
@@ -44,8 +45,7 @@ export default function TodoColumn({
       />
 
       <div className="select-all-row">
-        <input 
-            type="checkbox" 
+        <Checkbox
             className="todo-checkbox select-checkbox"
             checked={areAllSelected}
             onChange={(e) => onSelectAllInColumn(columnId, filteredTodos.map(t => t.id), e.target.checked)}

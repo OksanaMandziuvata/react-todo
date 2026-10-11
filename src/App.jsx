@@ -1,5 +1,5 @@
 import Board from '@/features/board';
-import './styles.scss';
+import '@/styles.scss';
 
 export default function App() {
   return (
