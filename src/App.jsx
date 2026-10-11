@@ -1,4 +1,4 @@
-import Board from './features/board/Board/Board';
+import Board from '@/features/board';
 import './styles.scss';
 
 export default function App() {
