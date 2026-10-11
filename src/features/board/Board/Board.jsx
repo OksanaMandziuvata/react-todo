@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { DndContext, PointerSensor, useSensor, useSensors, closestCorners } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
-import Navbar from '../../../shared/ui/Navbar/Navbar';
+import Navbar from '../Navbar/Navbar';
 import BulkActionsBar from '../../../shared/ui/BulkActionsBar/BulkActionsBar';
 import TodoColumn from '../TodoColumn/TodoColumn';
 import Modal from '../../../shared/ui/Modal/Modal';
