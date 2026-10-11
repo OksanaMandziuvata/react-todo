@@ -22,8 +22,6 @@ export default function Board() {
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   );
 
-  const findColumnByTodoId = (id) => columns.find(col => col.todos.some(t => t.id.toString() === id.toString()));
-
   const handleDragOver = ({ active, over }) => {
     if (!over) return;
     const activeId = active.id.toString();
@@ -31,16 +29,19 @@ export default function Board() {
 
     if (activeId === overId) return;
 
-    const activeColumn = findColumnByTodoId(activeId);
-    const overColumn = findColumnByTodoId(overId) || columns.find(c => c.id.toString() === overId);
-
-    if (!activeColumn || !overColumn || activeColumn.id === overColumn.id) return;
-
     setColumns(prev => {
+      const activeColumn = prev.find(col => col.todos.some(todo => todo.id.toString() === activeId));
+      const overColumn = prev.find(col => col.todos.some(todo => todo.id.toString() === overId))
+        || prev.find(column => column.id.toString() === overId);
+
+      if (!activeColumn || !overColumn || activeColumn.id === overColumn.id) return prev;
+
       const activeItems = activeColumn.todos;
       const overItems = overColumn.todos;
       const activeIndex = activeItems.findIndex(t => t.id.toString() === activeId);
       const overIndex = overItems.findIndex(t => t.id.toString() === overId);
+
+      if (activeIndex < 0) return prev;
 
       const newIndex = overIndex >= 0 ? overIndex : overItems.length;
 
@@ -63,22 +64,23 @@ export default function Board() {
     const activeId = active.id.toString();
     const overId = over.id.toString();
 
-    const activeColumn = findColumnByTodoId(activeId);
-    const overColumn = findColumnByTodoId(overId) || columns.find(c => c.id.toString() === overId);
+    setColumns(prev => {
+      const activeColumn = prev.find(col => col.todos.some(todo => todo.id.toString() === activeId));
+      const overColumn = prev.find(col => col.todos.some(todo => todo.id.toString() === overId))
+        || prev.find(column => column.id.toString() === overId);
 
-    if (!activeColumn || !overColumn || activeColumn.id !== overColumn.id) return;
+      if (!activeColumn || !overColumn || activeColumn.id !== overColumn.id) return prev;
 
-    const activeIndex = activeColumn.todos.findIndex(t => t.id.toString() === activeId);
-    const overIndex = overColumn.todos.findIndex(t => t.id.toString() === overId);
+      const activeIndex = activeColumn.todos.findIndex(todo => todo.id.toString() === activeId);
+      const overIndex = activeColumn.todos.findIndex(todo => todo.id.toString() === overId);
 
-    if (activeIndex !== overIndex) {
-      setColumns(prev => prev.map(col => {
-        if (col.id === activeColumn.id) {
-          return { ...col, todos: arrayMove(col.todos, activeIndex, overIndex) };
-        }
-        return col;
-      }));
-    }
+      if (activeIndex < 0 || overIndex < 0 || activeIndex === overIndex) return prev;
+
+      return prev.map(column => column.id === activeColumn.id
+        ? { ...column, todos: arrayMove(column.todos, activeIndex, overIndex) }
+        : column
+      );
+    });
   };
 
   const handleConfirmAddColumn = () => {
