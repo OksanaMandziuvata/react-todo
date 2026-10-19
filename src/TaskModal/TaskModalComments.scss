@@ -1,0 +1,166 @@
+.task-modal__comments-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 32px 24px;
+  border-top: 1px solid var(--border-color);
+
+  h2 {
+    margin: 0;
+    color: var(--text-heading);
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.task-modal__comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.task-modal__comment {
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-column);
+
+  p {
+    margin: 0 0 8px;
+    color: var(--text-heading);
+    font-size: 13px;
+    white-space: pre-wrap;
+  }
+
+  time {
+    color: var(--text-muted);
+    font-size: 11px;
+  }
+}
+
+.task-modal__comment-footer,
+.task-modal__comment-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-modal__comment-footer {
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.task-modal__comment-actions {
+  flex: 0 0 auto;
+
+  button {
+    min-height: auto;
+    padding: 2px 0;
+    border: 0;
+    background: none;
+    color: var(--text-subtle);
+    font: inherit;
+    font-size: 11px;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background: none;
+      color: var(--text-heading);
+    }
+  }
+
+  .task-modal__comment-delete {
+    color: var(--danger-color);
+
+    &:hover:not(:disabled) {
+      color: var(--danger-hover);
+    }
+  }
+}
+
+.task-modal__edit-comment-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+
+  textarea {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 72px;
+    resize: vertical;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+    background: var(--bg-surface);
+    color: var(--text-heading);
+    font: inherit;
+    font-size: 13px;
+
+    &:focus {
+      border-color: var(--accent-color);
+    }
+  }
+}
+
+.task-modal__empty-comments {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.task-modal__comment-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+
+  textarea {
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-height: 72px;
+    resize: vertical;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+    background: var(--bg-column);
+    color: var(--text-heading);
+    font: inherit;
+    font-size: 13px;
+
+    &:focus {
+      border-color: var(--accent-color);
+    }
+  }
+
+  button {
+    min-height: 36px;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--accent-color);
+    color: var(--text-on-accent);
+    font: inherit;
+    cursor: pointer;
+
+    &:disabled {
+      background: var(--disabled-surface);
+      color: var(--text-subtle);
+      cursor: not-allowed;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .task-modal__comments-panel {
+    padding: 16px;
+  }
+
+  .task-modal__comment-form {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

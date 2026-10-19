@@ -5,9 +5,9 @@
   width: 14px;
   height: 14px;
   margin: 0;
-  border: 1px solid #4a5478;
+  border: 1px solid var(--border-strong);
   border-radius: 3px;
-  background-color: transparent;
+  background-color: var(--color-transparent);
   cursor: pointer;
   transition: all 0.2s ease;
 

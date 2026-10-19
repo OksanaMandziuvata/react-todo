@@ -6,21 +6,21 @@
   padding: 8px 20px;
   gap: 12px;
   height: 41px;
-  background: #1a1f30;
+  background: var(--bg-bulk-actions);
   border-bottom: 1px solid var(--accent-color);
 
   .selected-count {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #818cf8;
+    color: var(--accent-text);
     font-weight: 600;
     font-size: 13px;
 
     .clear-selection {
-      background: transparent;
+      background: var(--color-transparent);
       border: none;
-      color: #64748b;
+      color: var(--text-muted);
       cursor: pointer;
       padding: 0;
       display: flex;
@@ -31,8 +31,8 @@
       border-radius: 4px;
 
       &:hover {
-        color: white;
-        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-on-accent);
+        background: var(--overlay-hover-strong);
       }
     }
   }
@@ -53,7 +53,7 @@
       background: var(--bg-column);
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      color: #94a3b8;
+      color: var(--text-subtle);
       font-weight: 500;
       font-size: 12px;
       cursor: pointer;
@@ -62,7 +62,7 @@
 
       &:hover {
         color: var(--text-primary);
-        border-color: #4a5478;
+        border-color: var(--border-strong);
       }
     }
 

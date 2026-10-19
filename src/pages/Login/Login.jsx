@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@/shared/ui/Button';
 import Checkbox from '@/shared/ui/Checkbox';
-import { GridIcon } from '@/shared/ui/icons';
+import { EmailIcon, EyeIcon, EyeOffIcon, GridIcon, LockIcon } from '@/shared/ui/icons';
 import './Login.scss';
 
 export default function Login() {
@@ -25,7 +25,7 @@ export default function Login() {
       <div className="login-card">
         <div className="login-header">
           <div className="login-logo">
-            <img src={GridIcon} width="20" height="20" alt="TrelloAlt" />
+            <img className="login-logo-icon" src={GridIcon} width="22" height="22" alt="TrelloAlt" />
             <h2>TrelloAlt</h2>
           </div>
           <h1>Welcome back</h1>
@@ -36,7 +36,7 @@ export default function Login() {
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <div className="input-wrapper">
-              <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+              <img className="input-icon" src={EmailIcon} alt="" />
               <input id="email" type="email" placeholder="olena@company.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
           </div>
@@ -44,17 +44,14 @@ export default function Login() {
           <div className="form-group">
             <div className="label-row">
               <label htmlFor="password">Password</label>
+              <span className="spacer" aria-hidden="true" />
               <a href="#" className="forgot-link">Forgot password?</a>
             </div>
             <div className="input-wrapper">
-              <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+              <img className="input-icon" src={LockIcon} alt="" />
               <input id="password" type={showPassword ? 'text' : 'password'} placeholder="••••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
               <button type="button" className="toggle-password-btn" onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
-                ) : (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                )}
+                <img src={showPassword ? EyeOffIcon : EyeIcon} alt="" />
               </button>
             </div>
           </div>
@@ -65,7 +62,10 @@ export default function Login() {
           </div>
 
           <Button className="btn-signin" type="submit" variant="primary">Sign in</Button>
-          <div className="login-footer">Don't have an account? <a href="#">Sign up</a></div>
+          <div className="login-footer">
+            <span>Don't have an account?</span>
+            <a href="#" className="sign-up-link">Sign up</a>
+          </div>
         </form>
       </div>
       <div className="page-footer">© 2026 TrelloAlt</div>

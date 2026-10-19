@@ -18,6 +18,7 @@ export default function TodoColumn({
   onEditTodo,
   onToggleSelect,
   onToggleComplete,
+  onOpenTask,
   onSelectAllInColumn,
   onEditColumnTitle,
   onDeleteColumn
@@ -64,6 +65,7 @@ export default function TodoColumn({
               onEditTodo={onEditTodo}
               onToggleSelect={onToggleSelect}
               onToggleComplete={onToggleComplete}
+              onOpenTask={onOpenTask}
             />
           ))}
         </SortableContext>

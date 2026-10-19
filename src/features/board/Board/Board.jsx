@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DndContext, PointerSensor, useSensor, useSensors, closestCorners } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
 import Button from '@/shared/ui/Button';
@@ -7,17 +7,56 @@ import Modal from '@/shared/ui/Modal';
 import TextInput from '@/shared/ui/TextInput';
 import BulkActionsBar from '@/features/board/BulkActionsBar/BulkActionsBar';
 import Navbar from '@/features/board/Navbar/Navbar';
+import TaskModal from '@/TaskModal';
 import TodoColumn from '@/features/board/TodoColumn/TodoColumn';
 import { FILTER_TYPES } from '@/features/board/constants';
 import './Board.scss';
 
+const BOARD_STORAGE_KEY = 'trelloAlt.board.columns';
+
+function loadBoard() {
+  try {
+    const storedColumns = localStorage.getItem(BOARD_STORAGE_KEY);
+    if (!storedColumns) return { columns: [], error: '' };
+
+    const columns = JSON.parse(storedColumns);
+    if (!Array.isArray(columns) || columns.some((column) => (
+      !column || column.id == null || typeof column.title !== 'string' || !Array.isArray(column.todos)
+    ))) {
+      throw new Error('Saved board data has an invalid structure.');
+    }
+    return { columns, error: '' };
+  } catch (error) {
+    console.error('Could not load the saved board from local storage.', error);
+    return {
+      columns: [],
+      error: 'Saved board data could not be loaded. Changes will replace it when you update the board.',
+    };
+  }
+}
+
 export default function Board() {
-  const [columns, setColumns] = useState([]);
+  const [initialBoard] = useState(loadBoard);
+  const [columns, setColumns] = useState(initialBoard.columns);
+  const [activeTask, setActiveTask] = useState(null);
+  const [storageError, setStorageError] = useState(initialBoard.error);
   const [globalSearch, setGlobalSearch] = useState('');
   const [filterType, setFilterType] = useState(FILTER_TYPES.ALL); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newColumnTitle, setNewColumnTitle] = useState('');
   const [deleteConfig, setDeleteConfig] = useState({ isOpen: false, action: null, message: '' });
+
+  useEffect(() => {
+    if (columns === initialBoard.columns) return;
+
+    try {
+      localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(columns));
+      queueMicrotask(() => setStorageError(''));
+    } catch (error) {
+      console.error('Could not save the board to local storage.', error);
+      queueMicrotask(() => setStorageError('Your changes could not be saved in this browser.'));
+    }
+  }, [columns, initialBoard.columns]);
 
   const isColumnTitleValid = newColumnTitle.trim().length >= 3;
 
@@ -137,6 +176,42 @@ export default function Board() {
     ));
   };
 
+  const handleSaveTask = (taskDraft) => {
+    const targetColumn = columns.find(column => String(column.id) === String(taskDraft.columnId));
+    const taskExists = columns.some(column => column.todos.some(todo => String(todo.id) === String(taskDraft.id)));
+
+    if (!targetColumn || !taskExists) {
+      console.error('Could not save task changes because the task or destination column no longer exists.');
+      return false;
+    }
+
+    const taskUpdates = { ...taskDraft };
+    delete taskUpdates.columnId;
+    setColumns(prev => {
+      let taskToSave;
+      const columnsWithoutTask = prev.map(column => ({
+        ...column,
+        todos: column.todos.filter(todo => {
+          if (String(todo.id) !== String(taskDraft.id)) return true;
+          taskToSave = { ...todo, ...taskUpdates };
+          return false;
+        }),
+      }));
+
+      if (!taskToSave) return prev;
+      return columnsWithoutTask.map(column => (
+        String(column.id) === String(targetColumn.id)
+          ? { ...column, todos: [...column.todos, taskToSave] }
+          : column
+      ));
+    });
+    return true;
+  };
+
+  const handleOpenTask = (columnId, task) => {
+    setActiveTask({ ...task, columnId });
+  };
+
   const handleToggleSelect = (columnId, todoId) => {
     setColumns(prev => prev.map(col => 
       col.id === columnId
@@ -240,6 +315,7 @@ export default function Board() {
                 onEditTodo={handleEditTodo}
                 onToggleSelect={handleToggleSelect}
                 onToggleComplete={handleToggleComplete} 
+                onOpenTask={handleOpenTask}
                 onSelectAllInColumn={handleSelectAllInColumn}
                 onEditColumnTitle={handleEditColumnTitle}
                 onDeleteColumn={handleDeleteColumn}
@@ -248,6 +324,20 @@ export default function Board() {
           )}
         </div>
       </DndContext>
+
+      {storageError && <div className="board-storage-error" role="alert">{storageError}</div>}
+
+      <TaskModal
+        key={activeTask?.id ?? 'closed'}
+        activeTask={activeTask}
+        columns={columns}
+        assignees={[...new Set([
+          'Olena Kovalenko',
+          ...columns.flatMap(column => column.todos.map(todo => todo.assignee).filter(Boolean)),
+        ])]}
+        onClose={() => setActiveTask(null)}
+        onSaveTask={handleSaveTask}
+      />
 
       {isModalOpen && (
         <div
