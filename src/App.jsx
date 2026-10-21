@@ -1,5 +1,5 @@
-import Board from './features/board/Board/Board';
-import './styles.scss';
+import Board from '@/features/board';
+import '@/styles.scss';
 
 export default function App() {
   return (

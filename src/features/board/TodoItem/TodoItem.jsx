@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import EditIcon from '../../../assets/EditIcon';
-import TrashIcon from '../../../assets/TrashIcon';
-import DragIcon from '../../../assets/DragIcon';
-import CheckIcon from '../../../assets/CheckIcon';
+import Checkbox from '@/shared/ui/Checkbox';
+import IconButton from '@/shared/ui/IconButton';
+import TextInput from '@/shared/ui/TextInput';
+import { CheckIcon, DragIcon, EditIcon, TrashIcon } from '@/shared/ui/icons';
 import './TodoItem.scss';
 
 export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onToggleSelect, onToggleComplete }) {
@@ -43,8 +43,7 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
       className={`todo-item ${todo.isSelected ? 'selected' : ''}`}
     >
       <div className="todo-item-left">
-        <input 
-          type="checkbox" 
+        <Checkbox
           checked={todo.isSelected} 
           onChange={() => onToggleSelect(columnId, todo.id)} 
           className="todo-checkbox select-checkbox"
@@ -57,11 +56,10 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
           {...attributes} 
           {...listeners}
         >
-          <DragIcon size={14} color="#64748B" />
+          <img src={DragIcon} width="14" height="14" alt="" />
         </span>
         
-        <input 
-          type="checkbox" 
+        <Checkbox
           checked={todo.isCompleted} 
           onChange={() => onToggleComplete(columnId, todo.id)} 
           className="todo-checkbox complete-checkbox"
@@ -71,7 +69,7 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
         
         {isEditing ? (
           <div className="edit-todo-container">
-            <input 
+            <TextInput
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -89,18 +87,31 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
       
       <div className="todo-item-actions">
           {isEditing ? (
-            <button className="btn-icon" onClick={handleSave} disabled={!isValid}>
-              <CheckIcon size={14} color="currentColor" />
-            </button>
+            <IconButton
+              className="btn-icon"
+              onClick={handleSave}
+              disabled={!isValid}
+              ariaLabel="Save item"
+            >
+              <img src={CheckIcon} width="14" height="14" alt="" />
+            </IconButton>
           ) : (
-            <button className="btn-icon" onClick={() => setIsEditing(true)}>
-              <EditIcon size={14} color="currentColor" />
-            </button>
+            <IconButton
+              className="btn-icon"
+              onClick={() => setIsEditing(true)}
+              ariaLabel="Edit item"
+            >
+              <img src={EditIcon} width="14" height="14" alt="" />
+            </IconButton>
           )}
           
-          <button className="btn-icon btn-delete" onClick={() => onDeleteTodo(columnId, todo.id)}>
-            <TrashIcon size={14} color="currentColor" />
-          </button>
+          <IconButton
+            className="btn-icon btn-delete"
+            onClick={() => onDeleteTodo(columnId, todo.id)}
+            ariaLabel="Delete item"
+          >
+            <img src={TrashIcon} width="14" height="14" alt="" />
+          </IconButton>
       </div>
     </li>
   );

@@ -1,13 +1,18 @@
 import { useState } from 'react';
 import { DndContext, PointerSensor, useSensor, useSensors, closestCorners } from '@dnd-kit/core';
-import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
-import Navbar from '../../../shared/ui/Navbar/Navbar';
-import BulkActionsBar from '../../../shared/ui/BulkActionsBar/BulkActionsBar';
-import TodoColumn from '../TodoColumn/TodoColumn';
-import Modal from '../../../shared/ui/Modal/Modal';
-import { FILTER_TYPES } from '../constants';
+import { SortableContext, horizontalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
+
+import Button from '@/shared/ui/Button';
+import ConfirmDialog from '@/shared/ui/ConfirmDialog';
+import Modal from '@/shared/ui/Modal';
+import TextInput from '@/shared/ui/TextInput';
+
+import BulkActionsBar from '@/features/board/BulkActionsBar/BulkActionsBar';
+import Navbar from '@/features/board/Navbar/Navbar';
+import TodoColumn from '@/features/board/TodoColumn/TodoColumn';
+import { FILTER_TYPES } from '@/features/board/constants';
+
 import useBoardDnd from '../useBoardDnd';
-import './Board.scss';
 
 export default function Board() {
   const [columns, setColumns] = useState([]);
@@ -192,28 +197,61 @@ export default function Board() {
         </div>
       </DndContext>
 
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => { setIsModalOpen(false); setNewColumnTitle(''); }}
-        onConfirm={handleConfirmAddColumn}
-        title="Add new column"
-        mode="input"
-        value={newColumnTitle}
-        onChange={setNewColumnTitle}
-        isValid={isColumnTitleValid}
-        errorMessage="Title must be at least 3 characters long."
-        confirmText="Add"
-      />
+      {isModalOpen && (
+        <div
+          className="add-column-dialog"
+          onClick={(event) => {
+            if (event.target.classList.contains('modal-overlay')) {
+              setIsModalOpen(false);
+              setNewColumnTitle('');
+            }
+          }}
+        >
+          <Modal
+            title="Add new column"
+            footer={
+              <>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    setNewColumnTitle('');
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button variant="primary" onClick={handleConfirmAddColumn} disabled={!isColumnTitleValid}>
+                  Add
+                </Button>
+              </>
+            }
+          >
+            <TextInput
+              autoFocus
+              className="modal-input"
+              value={newColumnTitle}
+              onChange={(event) => setNewColumnTitle(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' && isColumnTitleValid) handleConfirmAddColumn();
+                if (event.key === 'Escape') {
+                  setIsModalOpen(false);
+                  setNewColumnTitle('');
+                }
+              }}
+              placeholder="Column title..."
+            />
+            {!isColumnTitleValid && newColumnTitle.length > 0 && (
+              <div className="error-text">Title must be at least 3 characters long.</div>
+            )}
+          </Modal>
+        </div>
+      )}
 
-      <Modal
+      <ConfirmDialog
         isOpen={deleteConfig.isOpen}
-        onClose={() => setDeleteConfig({ isOpen: false, action: null, message: '' })}
-        onConfirm={confirmDelete}
-        title="Confirm Deletion"
-        mode="confirm"
         message={deleteConfig.message}
-        isValid={true}
-        confirmText="Delete"
+        onCancel={() => setDeleteConfig({ isOpen: false, action: null, message: '' })}
+        onConfirm={confirmDelete}
       />
     </>
   );

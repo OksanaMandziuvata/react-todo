@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import DragIcon from '../../assets/DragIcon';
-import EditIcon from '../../assets/EditIcon';
-import CloseIcon from '../../assets/CloseIcon';
-import CheckIcon from '../../assets/CheckIcon';
+import IconButton from '@/shared/ui/IconButton';
+import TextInput from '@/shared/ui/TextInput';
+import { CheckIcon, CloseIcon, DragIcon, EditIcon } from '@/shared/ui/icons';
 
 export default function ColumnHeader({
   title,
@@ -38,20 +37,21 @@ export default function ColumnHeader({
       {isEditingTitle ? (
         <div className="edit-title-wrapper">
           <div className="edit-title-group">
-            <input 
+            <TextInput
               value={titleText} 
               onChange={(e) => setTitleText(e.target.value)} 
               onKeyDown={handleKeyDown}
               className="column-title-input"
               autoFocus
             />
-            <button 
+            <IconButton
               onClick={handleSaveTitle} 
               className="btn-icon edit-title-btn" 
               disabled={!isTitleValid}
+              ariaLabel="Save column title"
             >
-              <CheckIcon size={14} color="currentColor" />
-            </button>
+              <img src={CheckIcon} width="14" height="14" alt="" />
+            </IconButton>
           </div>
           {!isTitleValid && titleText.length > 0 && (
             <span className="error-text-inline">Minimum 3 characters</span>
@@ -67,12 +67,20 @@ export default function ColumnHeader({
             <span className="task-count">{completedCount}/{todosCount}</span>
           </div>
           <div className="column-header-actions">
-            <button onClick={() => setIsEditingTitle(true)} className="btn-icon">
-              <EditIcon size={14} color="currentColor" />
-            </button>
-            <button onClick={onDeleteColumn} className="btn-icon btn-delete">
-              <CloseIcon size={14} color="currentColor" />
-            </button>
+            <IconButton
+              onClick={() => setIsEditingTitle(true)}
+              className="btn-icon"
+              ariaLabel="Edit column"
+            >
+              <img src={EditIcon} width="14" height="14" alt="" />
+            </IconButton>
+            <IconButton
+              onClick={onDeleteColumn}
+              className="btn-icon btn-delete"
+              ariaLabel="Delete column"
+            >
+              <img src={CloseIcon} width="14" height="14" alt="" />
+            </IconButton>
           </div>
         </>
       )}
