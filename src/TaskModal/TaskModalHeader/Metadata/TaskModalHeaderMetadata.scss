@@ -82,6 +82,22 @@
     font-size: 9px;
     font-weight: 600;
     line-height: 11px;
+
+    &--olena {
+      background: #ec4899;
+    }
+
+    &--andrii {
+      background: #06b6d4;
+    }
+
+    &--dmytro {
+      background: #f97316;
+    }
+
+    &--default {
+      background: var(--accent-color);
+    }
   }
 
   &__status-dot {

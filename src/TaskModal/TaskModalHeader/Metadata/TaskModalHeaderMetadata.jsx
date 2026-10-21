@@ -11,6 +11,15 @@ import './TaskModalHeaderMetadata.scss';
 
 const DEFAULT_TASK_TAGS = ['frontend', 'ux', 'board'];
 
+function getAssigneeAvatarClass(assignee) {
+  const member = {
+    'Olena Kovalenko': 'olena',
+    'Andrii Melnyk': 'andrii',
+    'Dmytro Shevchenko': 'dmytro',
+  }[assignee] || 'default';
+  return `task-modal-header__avatar task-modal-header__avatar--${member}`;
+}
+
 export default function TaskModalHeaderMetadata({
   task,
   columns,
@@ -38,7 +47,7 @@ export default function TaskModalHeaderMetadata({
   return (
     <div className="task-modal-header__details-row">
       <label className="task-modal-header__select-wrap task-modal-header__assignee">
-        <span className="task-modal-header__avatar" aria-hidden="true">
+        <span className={getAssigneeAvatarClass(task.assignee)} aria-hidden="true">
           {(task.assignee || 'Unassigned')
             .split(/\s+/)
             .map((part) => part[0])

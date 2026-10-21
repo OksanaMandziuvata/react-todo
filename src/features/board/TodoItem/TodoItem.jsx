@@ -66,7 +66,7 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
           title={todo.isCompleted ? "Mark as incomplete" : "Mark as complete"}
           aria-label={todo.isCompleted ? "Mark as incomplete" : "Mark as complete"}
         />
-        
+
         {isEditing ? (
           <div className="edit-todo-container">
             <TextInput

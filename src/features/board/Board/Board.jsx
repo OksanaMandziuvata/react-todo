@@ -8,16 +8,25 @@ import TextInput from '@/shared/ui/TextInput';
 import BulkActionsBar from '@/features/board/BulkActionsBar/BulkActionsBar';
 import Navbar from '@/features/board/Navbar/Navbar';
 import TaskModal from '@/TaskModal';
+import {
+  addMockTaskPeople,
+  loadTeamMembers,
+  TEAM_MEMBERS_STORAGE_KEY,
+} from '@/TaskModal/mockData';
 import TodoColumn from '@/features/board/TodoColumn/TodoColumn';
 import { FILTER_TYPES } from '@/features/board/constants';
+import {
+  BOARD_STORAGE_KEY,
+  normalizeTaskNumbers,
+  persistNextTaskNumber,
+  reserveNextTaskNumber,
+} from '@/features/board/taskNumbering';
 import './Board.scss';
-
-const BOARD_STORAGE_KEY = 'trelloAlt.board.columns';
 
 function loadBoard() {
   try {
     const storedColumns = localStorage.getItem(BOARD_STORAGE_KEY);
-    if (!storedColumns) return { columns: [], error: '' };
+    if (!storedColumns) return { columns: [], error: '', needsSave: false, nextTaskNumber: 1 };
 
     const columns = JSON.parse(storedColumns);
     if (!Array.isArray(columns) || columns.some((column) => (
@@ -25,21 +34,48 @@ function loadBoard() {
     ))) {
       throw new Error('Saved board data has an invalid structure.');
     }
-    return { columns, error: '' };
+    const numberedBoard = normalizeTaskNumbers(columns);
+    return {
+      ...numberedBoard,
+      error: '',
+      needsSave: numberedBoard.changed,
+    };
   } catch (error) {
     console.error('Could not load the saved board from local storage.', error);
     return {
       columns: [],
       error: 'Saved board data could not be loaded. Changes will replace it when you update the board.',
+      needsSave: false,
+      nextNumber: 1,
     };
   }
 }
 
+function removeTasksAndTheirLinks(columns, taskIds) {
+  const removedIds = new Set(taskIds.map(id => String(id)));
+  return columns.map(column => ({
+    ...column,
+    todos: column.todos
+      .filter(todo => !removedIds.has(String(todo.id)))
+      .map(todo => {
+        if (!Array.isArray(todo.relatedWork)) return todo;
+        const relatedWork = todo.relatedWork.filter(
+          relation => !removedIds.has(String(relation.taskId))
+        );
+        return relatedWork.length === todo.relatedWork.length ? todo : { ...todo, relatedWork };
+      }),
+  }));
+}
+
 export default function Board() {
   const [initialBoard] = useState(loadBoard);
+  const [initialTeam] = useState(loadTeamMembers);
   const [columns, setColumns] = useState(initialBoard.columns);
+  const [teamMembers] = useState(initialTeam.members);
   const [activeTask, setActiveTask] = useState(null);
-  const [storageError, setStorageError] = useState(initialBoard.error);
+  const [storageError, setStorageError] = useState(
+    [initialBoard.error, initialTeam.error].filter(Boolean).join(' ')
+  );
   const [globalSearch, setGlobalSearch] = useState('');
   const [filterType, setFilterType] = useState(FILTER_TYPES.ALL); 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,16 +83,28 @@ export default function Board() {
   const [deleteConfig, setDeleteConfig] = useState({ isOpen: false, action: null, message: '' });
 
   useEffect(() => {
-    if (columns === initialBoard.columns) return;
+    if (columns === initialBoard.columns && !initialBoard.needsSave) return;
 
     try {
       localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(columns));
+      persistNextTaskNumber(columns, initialBoard.nextNumber);
       queueMicrotask(() => setStorageError(''));
     } catch (error) {
       console.error('Could not save the board to local storage.', error);
       queueMicrotask(() => setStorageError('Your changes could not be saved in this browser.'));
     }
-  }, [columns, initialBoard.columns]);
+  }, [columns, initialBoard.columns, initialBoard.needsSave, initialBoard.nextNumber]);
+
+  useEffect(() => {
+    if (!initialTeam.shouldSeed) return;
+
+    try {
+      localStorage.setItem(TEAM_MEMBERS_STORAGE_KEY, JSON.stringify(initialTeam.members));
+    } catch (error) {
+      console.error('Could not save the default team members to local storage.', error);
+      queueMicrotask(() => setStorageError('The default team members could not be saved in this browser.'));
+    }
+  }, [initialTeam]);
 
   const isColumnTitleValid = newColumnTitle.trim().length >= 3;
 
@@ -144,17 +192,32 @@ export default function Board() {
   };
 
   const handleDeleteColumn = (columnId) => {
-    promptDelete(() => setColumns(prev => prev.filter(col => col.id !== columnId)));
+    promptDelete(() => setColumns(prev => {
+      const removedTaskIds = prev
+        .find(column => column.id === columnId)
+        ?.todos.map(todo => todo.id) || [];
+      return removeTasksAndTheirLinks(
+        prev.filter(column => column.id !== columnId),
+        removedTaskIds
+      );
+    }));
   };
 
   const handleDeleteTodo = (columnId, todoId) => {
-    promptDelete(() => setColumns(prev => prev.map(col => 
-      col.id === columnId ? { ...col, todos: col.todos.filter(todo => todo.id !== todoId) } : col
+    promptDelete(() => setColumns(prev => (
+      prev.some(column => column.id === columnId && column.todos.some(todo => todo.id === todoId))
+        ? removeTasksAndTheirLinks(prev, [todoId])
+        : prev
     )));
   };
 
   const handleBulkDelete = () => {
-    promptDelete(() => setColumns(prev => prev.map(col => ({ ...col, todos: col.todos.filter(t => !t.isSelected) }))));
+    promptDelete(() => setColumns(prev => {
+      const removedTaskIds = prev.flatMap(column => (
+        column.todos.filter(todo => todo.isSelected).map(todo => todo.id)
+      ));
+      return removeTasksAndTheirLinks(prev, removedTaskIds);
+    }));
   };
 
   const handleEditColumnTitle = (columnId, newTitle) => {
@@ -162,10 +225,34 @@ export default function Board() {
   };
 
   const handleAddTodo = (columnId, text) => {
-    const newTodo = { id: Date.now().toString(), text, isCompleted: false, isSelected: false };
+    let number;
+    try {
+      number = reserveNextTaskNumber(columns);
+    } catch (error) {
+      console.error('Could not reserve a task number from local storage.', error);
+      setStorageError('A task number could not be saved in this browser, so the task was not added.');
+      return;
+    }
+    const newTodo = {
+      id: Date.now().toString(),
+      number,
+      text,
+      isCompleted: false,
+      isSelected: false,
+    };
     setColumns(prev => prev.map(col => 
       col.id === columnId ? { ...col, todos: [...col.todos, newTodo] } : col
     ));
+  };
+
+  const handleReserveTaskNumber = () => {
+    try {
+      return reserveNextTaskNumber(columns);
+    } catch (error) {
+      console.error('Could not reserve a task number from local storage.', error);
+      setStorageError('A task number could not be saved in this browser.');
+      return null;
+    }
   };
 
   const handleEditTodo = (columnId, todoId, newText) => {
@@ -174,6 +261,23 @@ export default function Board() {
         ? { ...col, todos: col.todos.map(todo => todo.id === todoId ? { ...todo, text: newText } : todo) }
         : col
     ));
+  };
+
+  const handleRemoveTaskRelation = (sourceTaskId, relationId, targetTaskId, relationType) => {
+    setColumns(prev => prev.map(column => ({
+      ...column,
+      todos: column.todos.map(todo => {
+        if (String(todo.id) !== String(sourceTaskId) || !Array.isArray(todo.relatedWork)) return todo;
+        return {
+          ...todo,
+          relatedWork: todo.relatedWork.filter(relation => (
+            relationId
+              ? relation.id !== relationId
+              : !(String(relation.taskId) === String(targetTaskId) && relation.type === relationType)
+          )),
+        };
+      }),
+    })));
   };
 
   const handleSaveTask = (taskDraft) => {
@@ -209,7 +313,7 @@ export default function Board() {
   };
 
   const handleOpenTask = (columnId, task) => {
-    setActiveTask({ ...task, columnId });
+    setActiveTask({ ...addMockTaskPeople(task), columnId });
   };
 
   const handleToggleSelect = (columnId, todoId) => {
@@ -332,11 +436,13 @@ export default function Board() {
         activeTask={activeTask}
         columns={columns}
         assignees={[...new Set([
-          'Olena Kovalenko',
+          ...teamMembers,
           ...columns.flatMap(column => column.todos.map(todo => todo.assignee).filter(Boolean)),
         ])]}
         onClose={() => setActiveTask(null)}
         onSaveTask={handleSaveTask}
+        onRemoveTaskRelation={handleRemoveTaskRelation}
+        onReserveTaskNumber={handleReserveTaskNumber}
       />
 
       {isModalOpen && (

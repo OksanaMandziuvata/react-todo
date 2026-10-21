@@ -1,11 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import ConfirmDialog from '@/shared/ui/ConfirmDialog';
-import TaskModalHeader from './TaskModalHeader';
-import TaskModalDescription from './TaskModalDescription';
-import TaskModalPlanning from './TaskModalPlanning';
-import TaskModalTabs from './TaskModalTabs';
-import TaskModalComments from './TaskModalComments';
-import TaskModalHistory from './TaskModalHistory';
+import TaskModalHeader from '../TaskModalHeader/TaskModalHeader';
+import TaskModalDescription from '../TaskModalDescription/TaskModalDescription';
+import TaskModalPlanning from '../TaskModalPlanning/TaskModalPlanning';
+import {
+  TaskModalAttachments,
+  TaskModalPeople,
+  TaskModalRelatedWork,
+  default as TaskModalDetailsSections,
+} from '../TaskModalDetailsSections/TaskModalDetailsSections';
+import TaskModalTabs from '../TaskModalTabs/TaskModalTabs';
+import TaskModalComments from '../TaskModalComments/TaskModalComments';
 import './TaskModal.scss';
 
 const isSameTask = (first, second) => JSON.stringify(first) === JSON.stringify(second);
@@ -16,28 +21,19 @@ export default function TaskModal({
   assignees,
   onClose,
   onSaveTask,
+  onRemoveTaskRelation,
+  onReserveTaskNumber,
 }) {
   const [draftTask, setDraftTask] = useState(activeTask);
   const [savedTask, setSavedTask] = useState(activeTask);
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState('details');
-  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const [isDiscardConfirmOpen, setIsDiscardConfirmOpen] = useState(false);
   const isDirty = Boolean(draftTask && savedTask && !isSameTask(draftTask, savedTask));
 
   const saveDraft = useCallback(() => {
     if (!draftTask || !isDirty) return true;
-    const savedTaskDraft = {
-      ...draftTask,
-      history: [
-        ...(draftTask.history || []),
-        {
-          id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-          action: 'Updated task details',
-          createdAt: new Date().toISOString(),
-        },
-      ],
-    };
+    const savedTaskDraft = draftTask;
     const saved = onSaveTask(savedTaskDraft);
     if (saved === false) return false;
     setDraftTask(savedTaskDraft);
@@ -93,14 +89,18 @@ export default function TaskModal({
           onUpdateTask={updateDraft}
           onSave={saveDraft}
           onSaveAndClose={saveAndClose}
-          onToggleComments={() => setIsCommentsOpen((open) => !open)}
+          onToggleComments={() => {
+            document.getElementById('task-discussion-heading')?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+            });
+          }}
           onClose={requestClose}
           onExpand={() => setIsExpanded((expanded) => !expanded)}
           isExpanded={isExpanded}
         />
         <TaskModalTabs
           activeTab={activeTab}
-          history={draftTask.history || []}
           onChange={setActiveTab}
         />
         {activeTab === 'details' ? (
@@ -110,24 +110,58 @@ export default function TaskModal({
             role="tabpanel"
             aria-labelledby="task-details-tab"
           >
-            <TaskModalDescription
-              description={draftTask.description || ''}
-              attachments={draftTask.descriptionAttachments || []}
-              onDescriptionChange={(description) => updateDraft({ description })}
-              onAttachmentsChange={(descriptionAttachments) => updateDraft({ descriptionAttachments })}
-            />
-            <TaskModalPlanning
-              planning={draftTask.planning || {}}
-              onChange={(planning) => updateDraft({ planning })}
-            />
+            <div className="task-modal__main-column">
+              <TaskModalDescription
+                description={draftTask.description || ''}
+                attachments={draftTask.descriptionAttachments || []}
+                onDescriptionChange={(description) => updateDraft({ description })}
+                onAttachmentsChange={(descriptionAttachments) => updateDraft({ descriptionAttachments })}
+              />
+              <TaskModalDetailsSections
+                task={draftTask}
+                assignees={assignees}
+                columns={columns}
+                onUpdateTask={updateDraft}
+                onReserveTaskNumber={onReserveTaskNumber}
+              />
+              <TaskModalComments
+                comments={draftTask.comments || []}
+                onChange={(comments) => updateDraft({ comments })}
+              />
+            </div>
+            <aside className="task-modal__sidebar">
+              <TaskModalPlanning
+                planning={draftTask.planning || {}}
+                onChange={(planning) => updateDraft({ planning })}
+              />
+              <TaskModalPeople
+                task={draftTask}
+                assignees={assignees}
+                onUpdateTask={updateDraft}
+              />
+              <TaskModalRelatedWork
+                task={draftTask}
+                columns={columns}
+                onUpdateTask={updateDraft}
+                onRemoveTaskRelation={onRemoveTaskRelation}
+              />
+              <TaskModalAttachments
+                attachments={draftTask.attachments || []}
+                onChange={(attachments) => updateDraft({ attachments })}
+              />
+              <p className="task-modal__updated">
+                Created {draftTask.createdAt ? new Date(draftTask.createdAt).toLocaleDateString() : '—'}
+                {draftTask.createdBy ? ` by ${draftTask.createdBy}` : ''}
+                {draftTask.updatedAt && ` · Updated ${new Date(draftTask.updatedAt).toLocaleDateString()}`}
+              </p>
+            </aside>
           </div>
         ) : (
-          <TaskModalHistory history={draftTask.history || []} />
-        )}
-        {isCommentsOpen && (
-          <TaskModalComments
-            comments={draftTask.comments || []}
-            onChange={(comments) => updateDraft({ comments })}
+          <div
+            id="task-history-panel"
+            className="task-modal__empty-history-panel"
+            role="tabpanel"
+            aria-labelledby="task-history-tab"
           />
         )}
         <ConfirmDialog

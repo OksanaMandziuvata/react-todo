@@ -1,7 +1,7 @@
 import Button from '@/shared/ui/Button';
 import './TaskModalTabs.scss';
 
-export default function TaskModalTabs({ activeTab, history, onChange }) {
+export default function TaskModalTabs({ activeTab, onChange }) {
   return (
     <div className="task-modal-tabs" role="tablist" aria-label="Task detail sections">
       <Button
@@ -22,8 +22,7 @@ export default function TaskModalTabs({ activeTab, history, onChange }) {
         aria-controls="task-history-panel"
         onClick={() => onChange('history')}
       >
-        <span>History</span>
-        <span className="task-modal-tabs__count">{history.length}</span>
+        History
       </Button>
     </div>
   );

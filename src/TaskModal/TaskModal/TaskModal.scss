@@ -24,12 +24,47 @@
   background: var(--bg-surface);
   box-shadow: 0 16px 48px var(--shadow-modal);
 
+  select {
+    color-scheme: dark;
+
+    option {
+      background-color: var(--bg-column);
+      color: var(--text-heading);
+    }
+  }
+
   &__content-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
     align-items: start;
-    gap: 16px;
+    gap: 24px;
     padding: 16px 22px 24px;
+  }
+
+  &__main-column {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__sidebar {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__updated {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  &__empty-history-panel {
+    min-height: 320px;
+    flex: 1 1 auto;
   }
 
   &__body {
@@ -68,11 +103,16 @@
 
   .task-modal {
     max-height: calc(100vh - 16px);
+    overflow-y: auto;
     border-radius: 10px;
   }
 
   .task-modal__content-grid,
   .task-modal__body {
     padding: 12px;
+  }
+
+  .task-modal__content-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

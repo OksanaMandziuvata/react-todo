@@ -22,13 +22,13 @@ export default function TaskModalHeaderTopRow({
   onClose,
 }) {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
-  const shortTaskId = String(task.id).slice(-3);
+  const taskNumber = task.number ?? String(task.id).slice(-3);
 
   const handleCopyId = async () => {
     try {
-      await navigator.clipboard.writeText(String(task.id));
+      await navigator.clipboard.writeText(String(taskNumber));
     } catch (error) {
-      console.error('Could not copy task ID to clipboard.', error);
+      console.error('Could not copy the task number to the clipboard.', error);
     }
   };
 
@@ -39,10 +39,10 @@ export default function TaskModalHeaderTopRow({
           <span className="task-modal-header__type-mark" aria-hidden="true" />
           TASK
         </span>
-        <span className="task-modal-header__id">#{shortTaskId}</span>
+        <span className="task-modal-header__id">#{taskNumber}</span>
         <IconButton
           className="task-modal-header__icon-button"
-          ariaLabel={`Copy task ID ${shortTaskId}`}
+          ariaLabel={`Copy task number ${taskNumber}`}
           onClick={handleCopyId}
         >
           <img className="task-modal-header__icon" src={CopyIcon} alt="" />
@@ -95,7 +95,7 @@ export default function TaskModalHeaderTopRow({
         </IconButton>
         {isMoreOpen && (
           <div className="task-modal-header__more-menu">
-            <Button onClick={handleCopyId}>Copy task ID</Button>
+            <Button onClick={handleCopyId}>Copy task number</Button>
             <Button
               onClick={() => {
                 onUpdateTask({ isCompleted: !task.isCompleted });

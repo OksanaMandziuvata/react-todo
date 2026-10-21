@@ -119,6 +119,14 @@
       color: var(--text-heading);
       font: inherit;
       font-size: 13px;
+      color-scheme: dark;
+      appearance: textfield;
+
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        margin: 0;
+        appearance: none;
+      }
     }
 
     > span {

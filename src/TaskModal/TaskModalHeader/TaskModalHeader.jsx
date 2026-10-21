@@ -1,7 +1,7 @@
-import TaskModalHeaderClassification from './TaskModalHeaderClassification';
-import TaskModalHeaderMetadata from './TaskModalHeaderMetadata';
-import TaskModalHeaderTitle from './TaskModalHeaderTitle';
-import TaskModalHeaderTopRow from './TaskModalHeaderTopRow';
+import TaskModalHeaderClassification from './Classification/TaskModalHeaderClassification';
+import TaskModalHeaderMetadata from './Metadata/TaskModalHeaderMetadata';
+import TaskModalHeaderTitle from './Title/TaskModalHeaderTitle';
+import TaskModalHeaderTopRow from './TopRow/TaskModalHeaderTopRow';
 import './TaskModalHeader.scss';
 
 export default function TaskModalHeader({
