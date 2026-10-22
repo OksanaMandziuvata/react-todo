@@ -1,0 +1,240 @@
+.task-modal-subtasks {
+  min-height: 297px;
+
+  &__progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    > span {
+      height: 4px;
+      flex: 1 1 auto;
+      overflow: hidden;
+      border-radius: 4px;
+      background: var(--border-color);
+
+      span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--success-strong);
+      }
+
+      @media (max-width: 700px) {
+        .task-modal-subtasks {
+          &__row {
+            grid-template-columns: minmax(0, 1fr) 76px 65px 18px;
+
+            > :nth-child(2) {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+
+    small {
+      flex: 0 0 auto;
+      color: var(--text-subtle);
+      font-size: 11px;
+    }
+  }
+
+  &__table {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: minmax(130px, 1fr) minmax(90px, 0.55fr) 56px 82px 20px;
+    min-height: 30px;
+    align-items: center;
+    gap: 8px;
+    border-top: 1px solid rgba(45, 52, 72, 0.65);
+    color: var(--text-heading);
+    font-size: 11px;
+
+    > label,
+    > span {
+      min-width: 0;
+    }
+
+    &--heading {
+      min-height: 24px;
+      border-top: 0;
+      color: var(--text-muted);
+      font-size: 10px;
+      text-transform: uppercase;
+    }
+  }
+
+  &__title {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 6px;
+
+    input[type='checkbox'] {
+      width: 13px;
+      height: 13px;
+      flex: 0 0 auto;
+      accent-color: var(--accent-color);
+    }
+
+    &.is-complete .task-modal-subtasks__name {
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
+  }
+
+  &__assignee {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 6px;
+
+    .task-modal-people__avatar {
+      width: 18px;
+      height: 18px;
+      flex-basis: 18px;
+      font-size: 7px;
+    }
+
+    select {
+      width: 100%;
+      min-width: 0;
+      padding: 3px 0;
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: var(--text-heading);
+      font: inherit;
+      font-size: 11px;
+      color-scheme: dark;
+    }
+  }
+
+  &__state {
+    position: relative;
+    display: inline-flex;
+    width: fit-content;
+    max-width: 100%;
+    align-items: center;
+    border-radius: 10px;
+    background: rgba(71, 85, 105, 0.35);
+    color: var(--text-subtle);
+
+    &::after {
+      position: absolute;
+      top: 50%;
+      right: 6px;
+      width: 5px;
+      height: 5px;
+      border-right: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
+      content: '';
+      pointer-events: none;
+      transform: translateY(-70%) rotate(45deg);
+    }
+
+    select {
+      width: 100%;
+      min-width: 0;
+      appearance: none;
+      padding: 3px 17px 3px 8px;
+      border: 0;
+      border-radius: inherit;
+      outline: none;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-size: 10px;
+      line-height: 14px;
+      cursor: pointer;
+      color-scheme: dark;
+    }
+
+    option {
+      background: var(--bg-column);
+      color: var(--text-heading);
+    }
+
+    &--done {
+      background: var(--success-surface);
+      color: var(--success-color);
+    }
+
+    &--in-progress {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+    }
+
+    &--to-do {
+      background: rgba(71, 85, 105, 0.35);
+      color: var(--text-subtle);
+    }
+  }
+
+  &__id {
+    flex: 0 0 auto;
+    color: var(--text-muted);
+  }
+
+  &__name {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    padding: 3px 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+  }
+
+  &__estimate {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    color: var(--text-muted);
+
+    input {
+      box-sizing: border-box;
+      width: 34px;
+      padding: 3px 0;
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      color-scheme: dark;
+    }
+  }
+
+  &__remove {
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    border: 0;
+    background: transparent;
+    color: var(--text-muted);
+    opacity: 0;
+    cursor: pointer;
+
+    img {
+      display: block;
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  &__row:hover &__remove,
+  &__remove:focus-visible {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,60 @@
+.task-modal-tabs {
+  box-sizing: border-box;
+  display: flex;
+  height: 43px;
+  flex: 0 0 43px;
+  align-items: center;
+  gap: 24px;
+  padding: 0 32px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-surface);
+
+  &__tab {
+    box-sizing: border-box;
+    display: inline-flex;
+    height: 42px;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 0;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    color: var(--text-subtle);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 16px;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--text-heading);
+    }
+
+    &.is-active {
+      border-bottom-color: var(--accent-color);
+      color: var(--text-heading);
+      font-weight: 600;
+    }
+  }
+
+  &__count {
+    display: inline-flex;
+    min-width: 24px;
+    height: 15px;
+    align-items: center;
+    justify-content: center;
+    padding: 1px 6px;
+    border-radius: 8px;
+    background: var(--bg-column);
+    color: var(--text-subtle);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 13px;
+  }
+}
+
+@media (max-width: 600px) {
+  .task-modal-tabs {
+    padding: 0 16px;
+  }
+}

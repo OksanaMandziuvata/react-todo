@@ -1,0 +1,35 @@
+.task-modal-header {
+  box-sizing: border-box;
+  display: flex;
+  flex: 0 0 243px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+  height: 243px;
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-heading);
+  font-family: Inter, sans-serif;
+
+  &__icon {
+    display: block;
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+  }
+}
+
+@media (max-width: 900px) {
+  .task-modal-header {
+    flex: 0 0 auto;
+    height: auto;
+    min-height: 243px;
+  }
+}
+
+@media (max-width: 600px) {
+  .task-modal-header {
+    padding: 16px;
+  }
+}

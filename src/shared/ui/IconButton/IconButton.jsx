@@ -5,7 +5,8 @@ export default function IconButton({
   onClick,
   className = '',
   ariaLabel,
-  disabled = false
+  disabled = false,
+  ...props
 }) {
   return (
     <button
@@ -14,6 +15,7 @@ export default function IconButton({
       aria-label={ariaLabel}
       onClick={onClick}
       disabled={disabled}
+      {...props}
     >
       {children}
     </button>

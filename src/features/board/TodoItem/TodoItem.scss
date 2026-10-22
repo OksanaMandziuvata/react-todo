@@ -13,7 +13,7 @@
 
   &.selected {
     border-color: var(--accent-color);
-    background-color: #1c2038;
+    background-color: var(--bg-selected);
   }
 
   .todo-item-left {
@@ -25,7 +25,7 @@
   }
 
   .drag-handle {
-    color: #64748b;
+    color: var(--text-muted);
     font-size: 14px;
     user-select: none;
     width: 12px;
@@ -45,8 +45,17 @@
 
   .todo-text-content {
     font-size: 13px;
-    color: #e2e8f0;
+    color: var(--text-heading);
     font-weight: 400;
+  }
+
+  .todo-text-trigger {
+    padding: 0;
+    border: 0;
+    background: var(--color-transparent);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
   }
 
   .completed-text {
@@ -59,7 +68,7 @@
   .edit-todo-input {
     background-color: var(--bg-surface);
     border: 1px solid var(--accent-color);
-    color: white;
+    color: var(--text-on-accent);
     padding: 4px 8px;
     border-radius: 4px;
     flex-grow: 1;
@@ -72,9 +81,9 @@
     gap: 2px;
 
     .btn-icon {
-      background: transparent;
+      background: var(--color-transparent);
       border: none;
-      color: #64748b;
+      color: var(--text-muted);
       cursor: pointer;
       font-size: 14px;
       padding: 0;
@@ -87,23 +96,23 @@
 
       &:hover {
         color: var(--text-primary);
-        background: rgba(255, 255, 255, 0.05);
+        background: var(--overlay-hover);
       }
 
       &.btn-delete:hover {
-        color: #f87171;
+        color: var(--danger-hover);
       }
     }
   }
 }
 
 .btn-icon:disabled {
-  color: #475569 !important;
+  color: var(--text-disabled) !important;
   cursor: not-allowed !important;
 }
 
 .error-text-inline {
-  color: #ef4444;
+  color: var(--danger-color);
   font-size: 11px;
   padding-left: 10px;
   margin-top: 4px;

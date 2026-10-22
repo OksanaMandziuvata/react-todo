@@ -1,0 +1,243 @@
+.task-modal-description {
+  box-sizing: border-box;
+  display: flex;
+  min-width: 0;
+  height: 258px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-surface);
+
+  &__header {
+    display: flex;
+    min-width: 0;
+    height: 17px;
+    align-items: center;
+    gap: 8px;
+
+    h2 {
+      margin: 0;
+      color: var(--text-heading);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 17px;
+    }
+
+    span {
+      margin-left: auto;
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 15px;
+    }
+  }
+
+  &__editor {
+    box-sizing: border-box;
+    display: flex;
+    min-height: 0;
+    flex: 1 1 auto;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-column);
+  }
+
+  &__toolbar {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    height: 41px;
+    min-height: 41px;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--border-color);
+
+    button {
+      display: inline-flex;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text-subtle);
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+
+      &:hover,
+      &:focus-visible {
+        outline: none;
+        background: var(--overlay-hover);
+        color: var(--text-heading);
+      }
+
+      img {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+
+  &__divider {
+    width: 1px;
+    height: 16px;
+    flex: 0 0 1px;
+    margin: 0 3px;
+    background: var(--border-color);
+  }
+
+  &__link-form {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 38px;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-surface);
+    box-shadow: 0 8px 20px var(--shadow-modal);
+
+    input {
+      width: 190px;
+      height: 28px;
+      padding: 4px 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      outline: none;
+      background: var(--bg-column);
+      color: var(--text-heading);
+      font: inherit;
+      font-size: 12px;
+
+      &:focus {
+        border-color: var(--accent-color);
+      }
+    }
+
+    button {
+      height: 28px;
+      padding: 4px 8px;
+      border: 0;
+      border-radius: 5px;
+      background: var(--accent-color);
+      color: var(--text-on-accent);
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    span {
+      max-width: 190px;
+      color: var(--danger-color);
+      font-size: 11px;
+    }
+  }
+
+  &__content {
+    display: flex;
+    min-height: 0;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 8px;
+    overflow: auto;
+    padding: 14px;
+  }
+
+  &__editable {
+    min-height: 100%;
+    outline: none;
+    color: var(--text-heading);
+    font-size: 13px;
+    line-height: 20px;
+    overflow-wrap: anywhere;
+
+    &:empty::before {
+      color: var(--text-muted);
+      content: attr(data-placeholder);
+      pointer-events: none;
+    }
+
+    p {
+      margin: 0 0 8px;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--text-subtle);
+    }
+
+    pre,
+    code {
+      border-radius: 4px;
+      background: var(--bg-main);
+      font-family: Consolas, monospace;
+    }
+
+    pre {
+      padding: 8px;
+      white-space: pre-wrap;
+    }
+
+    a {
+      color: var(--accent-text);
+    }
+  }
+
+  &__attachments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-subtle);
+      font-size: 12px;
+    }
+
+    a {
+      color: var(--accent-text);
+      text-decoration: none;
+    }
+
+    button {
+      border: 0;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    &__error {
+      margin: 0;
+      color: var(--danger-color);
+      font-size: 12px;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .task-modal-description {
+    height: 258px;
+    padding: 12px;
+  }
+}

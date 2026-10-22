@@ -1,0 +1,114 @@
+.task-modal-section {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-surface);
+
+  &__header {
+    display: flex;
+    min-height: 17px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    h2 {
+      margin: 0;
+      color: var(--text-heading);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 17px;
+    }
+  }
+
+  &__action {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--accent-text);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--text-heading);
+    }
+
+    img {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  &__count {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--bg-column);
+    color: var(--text-subtle);
+    font-size: 11px;
+    line-height: 14px;
+  }
+
+  &__empty {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  &__add-form {
+    display: flex;
+    gap: 8px;
+
+    input {
+      box-sizing: border-box;
+      min-width: 0;
+      height: 30px;
+      flex: 1 1 auto;
+      padding: 5px 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      outline: none;
+      background: var(--bg-column);
+      color: var(--text-heading);
+      font: inherit;
+      font-size: 12px;
+
+      &:focus {
+        border-color: var(--accent-color);
+      }
+    }
+
+    button {
+      padding: 0 10px;
+      border: 0;
+      border-radius: 6px;
+      background: var(--accent-color);
+      color: var(--text-on-accent);
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+
+      &:disabled {
+        background: var(--disabled-surface);
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &__error {
+    margin: 0;
+    color: var(--danger-color);
+    font-size: 11px;
+  }
+}
