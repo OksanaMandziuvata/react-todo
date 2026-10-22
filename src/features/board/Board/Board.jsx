@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { DndContext, PointerSensor, useSensor, useSensors, closestCorners } from '@dnd-kit/core';
-import { arrayMove } from '@dnd-kit/sortable';
+import { SortableContext, horizontalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
+
 import Button from '@/shared/ui/Button';
 import ConfirmDialog from '@/shared/ui/ConfirmDialog';
 import Modal from '@/shared/ui/Modal';
 import TextInput from '@/shared/ui/TextInput';
+
 import BulkActionsBar from '@/features/board/BulkActionsBar/BulkActionsBar';
 import Navbar from '@/features/board/Navbar/Navbar';
 import TodoColumn from '@/features/board/TodoColumn/TodoColumn';
 import { FILTER_TYPES } from '@/features/board/constants';
-import './Board.scss';
+
+import useBoardDnd from '../useBoardDnd';
 
 export default function Board() {
   const [columns, setColumns] = useState([]);
@@ -25,66 +28,8 @@ export default function Board() {
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   );
 
-  const handleDragOver = ({ active, over }) => {
-    if (!over) return;
-    const activeId = active.id.toString();
-    const overId = over.id.toString();
-
-    if (activeId === overId) return;
-
-    setColumns(prev => {
-      const activeColumn = prev.find(col => col.todos.some(todo => todo.id.toString() === activeId));
-      const overColumn = prev.find(col => col.todos.some(todo => todo.id.toString() === overId))
-        || prev.find(column => column.id.toString() === overId);
-
-      if (!activeColumn || !overColumn || activeColumn.id === overColumn.id) return prev;
-
-      const activeItems = activeColumn.todos;
-      const overItems = overColumn.todos;
-      const activeIndex = activeItems.findIndex(t => t.id.toString() === activeId);
-      const overIndex = overItems.findIndex(t => t.id.toString() === overId);
-
-      if (activeIndex < 0) return prev;
-
-      const newIndex = overIndex >= 0 ? overIndex : overItems.length;
-
-      return prev.map(col => {
-        if (col.id === activeColumn.id) {
-          return { ...col, todos: col.todos.filter(t => t.id.toString() !== activeId) };
-        }
-        if (col.id === overColumn.id) {
-          const newTodos = [...col.todos];
-          newTodos.splice(newIndex, 0, activeItems[activeIndex]);
-          return { ...col, todos: newTodos };
-        }
-        return col;
-      });
-    });
-  };
-
-  const handleDragEnd = ({ active, over }) => {
-    if (!over) return;
-    const activeId = active.id.toString();
-    const overId = over.id.toString();
-
-    setColumns(prev => {
-      const activeColumn = prev.find(col => col.todos.some(todo => todo.id.toString() === activeId));
-      const overColumn = prev.find(col => col.todos.some(todo => todo.id.toString() === overId))
-        || prev.find(column => column.id.toString() === overId);
-
-      if (!activeColumn || !overColumn || activeColumn.id !== overColumn.id) return prev;
-
-      const activeIndex = activeColumn.todos.findIndex(todo => todo.id.toString() === activeId);
-      const overIndex = activeColumn.todos.findIndex(todo => todo.id.toString() === overId);
-
-      if (activeIndex < 0 || overIndex < 0 || activeIndex === overIndex) return prev;
-
-      return prev.map(column => column.id === activeColumn.id
-        ? { ...column, todos: arrayMove(column.todos, activeIndex, overIndex) }
-        : column
-      );
-    });
-  };
+  const { handleDragStart, handleDragOver, handleDragEnd } = useBoardDnd(columns, setColumns);
+  const columnsIds = columns.map((column) => column.id);
 
   const handleConfirmAddColumn = () => {
     if (isColumnTitleValid) {
@@ -217,6 +162,7 @@ export default function Board() {
       <DndContext 
         sensors={sensors}
         collisionDetection={closestCorners}
+        onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
@@ -227,24 +173,26 @@ export default function Board() {
               <p>Click "+ Add Column" in the top right to get started.</p>
             </div>
           ) : (
-            columns.map(column => (
-              <TodoColumn
-                key={column.id}
-                columnId={column.id}
-                title={column.title}
-                todos={column.todos}
-                globalSearchQuery={globalSearch}
-                filterType={filterType}
-                onAddTodo={handleAddTodo}
-                onDeleteTodo={handleDeleteTodo}
-                onEditTodo={handleEditTodo}
-                onToggleSelect={handleToggleSelect}
-                onToggleComplete={handleToggleComplete} 
-                onSelectAllInColumn={handleSelectAllInColumn}
-                onEditColumnTitle={handleEditColumnTitle}
-                onDeleteColumn={handleDeleteColumn}
-              />
-            ))
+            <SortableContext items={columnsIds} strategy={horizontalListSortingStrategy}>
+              {columns.map(column => (
+                <TodoColumn
+                  key={column.id}
+                  columnId={column.id}
+                  title={column.title}
+                  todos={column.todos}
+                  globalSearchQuery={globalSearch}
+                  filterType={filterType}
+                  onAddTodo={handleAddTodo}
+                  onDeleteTodo={handleDeleteTodo}
+                  onEditTodo={handleEditTodo}
+                  onToggleSelect={handleToggleSelect}
+                  onToggleComplete={handleToggleComplete} 
+                  onSelectAllInColumn={handleSelectAllInColumn}
+                  onEditColumnTitle={handleEditColumnTitle}
+                  onDeleteColumn={handleDeleteColumn}
+                />
+              ))}
+            </SortableContext>
           )}
         </div>
       </DndContext>

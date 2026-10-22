@@ -3,7 +3,15 @@ import IconButton from '@/shared/ui/IconButton';
 import TextInput from '@/shared/ui/TextInput';
 import { CheckIcon, CloseIcon, DragIcon, EditIcon } from '@/shared/ui/icons';
 
-export default function ColumnHeader({ title, todosCount, completedCount, onEditColumnTitle, onDeleteColumn }) {
+export default function ColumnHeader({
+  title,
+  todosCount,
+  completedCount,
+  onEditColumnTitle,
+  onDeleteColumn,
+  dragAttributes,
+  dragListeners,
+}) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleText, setTitleText] = useState(title);
   
@@ -52,8 +60,8 @@ export default function ColumnHeader({ title, todosCount, completedCount, onEdit
       ) : (
         <>
           <div className="column-title-group">
-            <span className="drag-handle">
-              <img src={DragIcon} width="14" height="14" alt="" />
+            <span className="drag-handle" {...dragAttributes} {...dragListeners}>
+              <DragIcon size={14} color="#64748B" />
             </span>
             <h3>{title}</h3>
             <span className="task-count">{completedCount}/{todosCount}</span>
