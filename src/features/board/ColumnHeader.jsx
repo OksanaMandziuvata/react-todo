@@ -61,7 +61,7 @@ export default function ColumnHeader({
         <>
           <div className="column-title-group">
             <span className="drag-handle" {...dragAttributes} {...dragListeners}>
-              <DragIcon size={14} color="#64748B" />
+              <img src={DragIcon} width="14" height="14" alt="" />
             </span>
             <h3>{title}</h3>
             <span className="task-count">{completedCount}/{todosCount}</span>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { DndContext, PointerSensor, useSensor, useSensors, closestCorners } from '@dnd-kit/core';
-import { SortableContext, horizontalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
+import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import './Board.scss';
 
 import Button from '@/shared/ui/Button';
 import ConfirmDialog from '@/shared/ui/ConfirmDialog';
@@ -366,6 +367,7 @@ export default function Board() {
                   onEditTodo={handleEditTodo}
                   onToggleSelect={handleToggleSelect}
                   onToggleComplete={handleToggleComplete} 
+                  onOpenTask={handleOpenTask}
                   onSelectAllInColumn={handleSelectAllInColumn}
                   onEditColumnTitle={handleEditColumnTitle}
                   onDeleteColumn={handleDeleteColumn}

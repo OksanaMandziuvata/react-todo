@@ -1,11 +1,11 @@
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { useDroppable } from '@dnd-kit/core';
 import Checkbox from '@/shared/ui/Checkbox';
 import ColumnHeader from '@/features/board/ColumnHeader';
 import ColumnFooter from '@/features/board/ColumnFooter';
 import TodoItem from '@/features/board/TodoItem/TodoItem';
 import { FILTER_TYPES } from '@/features/board/constants';
+import './TodoColumn.scss';
 
 export default function TodoColumn({
   columnId,
