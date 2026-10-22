@@ -1,11 +1,11 @@
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { useDroppable } from '@dnd-kit/core';
 import Checkbox from '@/shared/ui/Checkbox';
 import ColumnHeader from '@/features/board/ColumnHeader';
 import ColumnFooter from '@/features/board/ColumnFooter';
 import TodoItem from '@/features/board/TodoItem/TodoItem';
 import { FILTER_TYPES } from '@/features/board/constants';
-import './TodoColumn.scss';
 
 export default function TodoColumn({
   columnId,
@@ -23,7 +23,11 @@ export default function TodoColumn({
   onEditColumnTitle,
   onDeleteColumn
 }) {
-  const { setNodeRef } = useDroppable({ id: columnId });
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: columnId });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   const filteredTodos = todos.filter(todo => {
     const matchesSearch = todo.text.toLowerCase().includes(globalSearchQuery.toLowerCase());
@@ -36,13 +40,15 @@ export default function TodoColumn({
   const completedCount = todos.filter(t => t.isCompleted).length;
 
   return (
-    <div className="todo-column" ref={setNodeRef}>
+    <div className="todo-column" ref={setNodeRef} style={style}>
       <ColumnHeader 
         title={title}
         todosCount={todos.length}
         completedCount={completedCount}
         onEditColumnTitle={(newTitle) => onEditColumnTitle(columnId, newTitle)}
         onDeleteColumn={() => onDeleteColumn(columnId)}
+        dragAttributes={attributes}
+        dragListeners={listeners}
       />
 
       <div className="select-all-row">
