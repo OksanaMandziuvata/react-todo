@@ -6,7 +6,7 @@
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--overlay-backdrop);
   z-index: 1000;
 }
 
@@ -17,7 +17,7 @@
   background-color: var(--bg-column);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 25px var(--shadow-modal);
 }
 
 .modal-title {
@@ -55,6 +55,6 @@
 
 .error-text {
   margin-top: 6px;
-  color: #ef4444;
+  color: var(--danger-color);
   font-size: 12px;
 }

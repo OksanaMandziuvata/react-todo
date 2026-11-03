@@ -7,7 +7,7 @@ import TextInput from '@/shared/ui/TextInput';
 import { CheckIcon, DragIcon, EditIcon, TrashIcon } from '@/shared/ui/icons';
 import './TodoItem.scss';
 
-export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onToggleSelect, onToggleComplete }) {
+export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onToggleSelect, onToggleComplete, onOpenTask }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(todo.text);
 
@@ -66,7 +66,7 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
           title={todo.isCompleted ? "Mark as incomplete" : "Mark as complete"}
           aria-label={todo.isCompleted ? "Mark as incomplete" : "Mark as complete"}
         />
-        
+
         {isEditing ? (
           <div className="edit-todo-container">
             <TextInput
@@ -79,9 +79,14 @@ export default function TodoItem({ todo, columnId, onDeleteTodo, onEditTodo, onT
             {!isValid && editText.length > 0 && <span className="error-text-inline error-text-padding">Minimum 3 chars</span>}
           </div>
         ) : (
-          <span className={todo.isCompleted ? 'completed-text' : 'todo-text-content'}>
+          <button
+            type="button"
+            className={`todo-text-trigger ${todo.isCompleted ? 'completed-text' : 'todo-text-content'}`}
+            onClick={() => onOpenTask?.(columnId, todo)}
+            aria-label={`Open task details: ${todo.text}`}
+          >
             {todo.text}
-          </span>
+          </button>
         )}
       </div>
       

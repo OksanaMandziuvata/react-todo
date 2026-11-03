@@ -17,8 +17,8 @@
   padding: 5px 12px;
   border: none;
   border-radius: 6px;
-  background: transparent;
-  color: #94a3b8;
+  background: var(--color-transparent);
+  color: var(--text-subtle);
   cursor: pointer;
   font-size: 13px;
   font-weight: 400;
@@ -27,7 +27,7 @@
 
   &.active {
     background-color: var(--accent-color);
-    color: #fff;
+    color: var(--text-on-accent);
     font-weight: 500;
   }
 

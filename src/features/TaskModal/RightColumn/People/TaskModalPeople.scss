@@ -1,0 +1,108 @@
+.task-modal-people {
+  min-height: 165px;
+
+  &__field {
+    display: grid;
+    grid-template-columns: minmax(64px, 0.6fr) minmax(0, 1fr);
+    min-height: 28px;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-subtle);
+    font-size: 11px;
+
+    > .ui-dropdown {
+      box-sizing: border-box;
+      width: 100%;
+      min-width: 0;
+      height: 28px;
+      padding: 4px 8px;
+      color: var(--text-heading);
+      font: inherit;
+    }
+
+    @media (max-width: 700px) {
+      .task-modal-people__field {
+        grid-template-columns: minmax(60px, 0.5fr) minmax(0, 1fr);
+      }
+    }
+  }
+
+  &__reviewer {
+    box-sizing: border-box;
+    display: flex;
+    min-width: 0;
+    height: 34px;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-column);
+
+    .task-modal-people__avatar {
+      width: 20px;
+      height: 20px;
+      flex-basis: 20px;
+      font-size: 8px;
+    }
+
+    .ui-dropdown {
+      flex: 1 1 auto;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .ui-dropdown__trigger {
+      width: 100%;
+      padding: 3px 0;
+      border: 0;
+      outline: none;
+      background-color: transparent;
+      color: var(--text-heading);
+      font: inherit;
+      font-size: 11px;
+    }
+  }
+
+  &__person {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    gap: 7px;
+    color: var(--text-heading);
+  }
+
+  &__avatar {
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--accent-color);
+    color: var(--text-on-accent);
+    font-size: 8px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &--olena {
+      background: #ec4899;
+    }
+
+    &--andrii {
+      background: #06b6d4;
+    }
+
+    &--dmytro {
+      background: #f97316;
+    }
+
+    &--default {
+      background: var(--accent-color);
+    }
+  }
+
+}

@@ -14,18 +14,18 @@
   border: none;
   border-radius: 8px;
   background-color: var(--accent-color);
-  color: #fff;
+  color: var(--text-on-accent);
   font-weight: 500;
   font-size: 13px;
   transition: background-color 0.2s;
 
   &:hover:not(:disabled) {
-    background-color: #4f46e5;
+    background-color: var(--accent-hover);
   }
 
   &:disabled {
-    background-color: #475569;
-    color: #94a3b8;
+    background-color: var(--disabled-surface);
+    color: var(--text-subtle);
     cursor: not-allowed;
   }
 }
@@ -34,12 +34,12 @@
   padding: 8px 16px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  background: transparent;
+  background: var(--color-transparent);
   color: var(--text-primary);
   font-size: 13px;
 
   &:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--overlay-hover);
   }
 }
 
@@ -56,14 +56,14 @@
   border: 1px solid var(--border-color);
   border-radius: 8px;
   background: var(--bg-column);
-  color: #94a3b8;
+  color: var(--text-subtle);
   font-weight: 500;
   font-size: 12px;
   outline: none;
   transition: all 0.2s;
 
   &:hover:not(:disabled) {
-    border-color: #4a5478;
+    border-color: var(--border-strong);
     color: var(--text-primary);
   }
 
@@ -73,21 +73,21 @@
 }
 
 .ui-button--success {
-  background: rgba(22, 197, 95, 0.12);
-  color: #22c55e;
+  background: var(--success-surface);
+  color: var(--success-strong);
 
   &:hover:not(:disabled) {
-    border-color: #22c55e;
+    border-color: var(--success-strong);
   }
 }
 
 .ui-button--danger {
   border: none;
-  background: rgba(239, 68, 68, 0.12);
-  color: #ef4444;
+  background: var(--danger-surface);
+  color: var(--danger-color);
 
   &:hover:not(:disabled) {
-    background: rgba(239, 68, 68, 0.2);
-    border-color: transparent;
+    background: var(--danger-surface-hover);
+    border-color: var(--color-transparent);
   }
 }

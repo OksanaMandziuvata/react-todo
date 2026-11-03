@@ -1,0 +1,115 @@
+.ui-dropdown {
+  position: relative;
+  display: flex;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.ui-dropdown__trigger {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 30px;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  box-sizing: border-box;
+  padding: 6px 8px 6px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--bg-column);
+  color: var(--text-heading);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ui-dropdown__trigger:focus-visible {
+  outline: none;
+  border-color: var(--text-muted);
+}
+
+.ui-dropdown__value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-dropdown__chevron {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
+  margin-left: auto;
+  opacity: 0.75;
+  transition: transform 0.15s ease;
+}
+
+.ui-dropdown__trigger[aria-expanded='true'] .ui-dropdown__chevron {
+  transform: rotate(180deg);
+}
+
+.ui-dropdown__trigger--no-chevron {
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.ui-dropdown__menu {
+  position: fixed;
+  z-index: 1500;
+  box-sizing: border-box;
+  max-width: min(320px, calc(100vw - 16px));
+  max-height: min(280px, calc(100vh - 16px));
+  overflow: auto;
+  padding: 5px;
+  border: 1px solid var(--border-strong);
+  border-radius: 9px;
+  background: var(--bg-surface);
+  box-shadow: 0 12px 32px var(--shadow-modal);
+  color: var(--text-heading);
+}
+
+.ui-dropdown__option {
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 7px 10px;
+  border-radius: 5px;
+  color: var(--text-subtle);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.ui-dropdown__option.is-active {
+  background: var(--overlay-hover);
+  color: var(--text-heading);
+}
+
+.ui-dropdown__option.is-selected {
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+.ui-dropdown__option.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ui-dropdown__option.is-selected.is-active {
+  background: var(--overlay-hover);
+}
+
+.ui-dropdown__menu:focus {
+  outline: none;
+}
+
+.ui-dropdown__menu [role='option'] {
+  background: var(--bg-surface);
+}

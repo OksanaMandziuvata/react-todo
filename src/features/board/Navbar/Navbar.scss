@@ -20,13 +20,13 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #818cf8;
+    color: var(--accent-text);
 
     h2 {
       margin: 0;
       font-size: 16px;
       font-weight: 700;
-      color: #818cf8;
+      color: var(--accent-text);
     }
   }
 }
