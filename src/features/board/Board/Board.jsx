@@ -10,12 +10,12 @@ import TextInput from '@/shared/ui/TextInput';
 
 import BulkActionsBar from '@/features/board/BulkActionsBar/BulkActionsBar';
 import Navbar from '@/features/board/Navbar/Navbar';
-import TaskModal from '@/TaskModal';
+import TaskModal from '@/features/TaskModal';
 import {
   addMockTaskPeople,
   loadTeamMembers,
   TEAM_MEMBERS_STORAGE_KEY,
-} from '@/TaskModal/mockData';
+} from '@/features/TaskModal/mockData';
 import TodoColumn from '@/features/board/TodoColumn/TodoColumn';
 import { FILTER_TYPES } from '@/features/board/constants';
 
@@ -92,10 +92,10 @@ export default function Board() {
     try {
       localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(columns));
       persistNextTaskNumber(columns, initialBoard.nextNumber);
-      queueMicrotask(() => setStorageError(''));
+      setStorageError('');
     } catch (error) {
       console.error('Could not save the board to local storage.', error);
-      queueMicrotask(() => setStorageError('Your changes could not be saved in this browser.'));
+      setStorageError('Your changes could not be saved in this browser.');
     }
   }, [columns, initialBoard.columns, initialBoard.needsSave, initialBoard.nextNumber]);
 
@@ -106,7 +106,7 @@ export default function Board() {
       localStorage.setItem(TEAM_MEMBERS_STORAGE_KEY, JSON.stringify(initialTeam.members));
     } catch (error) {
       console.error('Could not save the default team members to local storage.', error);
-      queueMicrotask(() => setStorageError('The default team members could not be saved in this browser.'));
+      setStorageError('The default team members could not be saved in this browser.');
     }
   }, [initialTeam]);
 
@@ -299,7 +299,7 @@ export default function Board() {
   };
 
   const handleBulkMove = (e) => {
-    const targetColumnId = Number(e.target.value);
+    const targetColumnId = e.target.value;
     if (!targetColumnId) return;
 
     setColumns(prevColumns => {
@@ -310,7 +310,7 @@ export default function Board() {
       const cleanedItems = itemsToMove.map(item => ({ ...item, isSelected: false }));
 
       return prevColumns.map(col => {
-        if (col.id === targetColumnId) {
+        if (String(col.id) === targetColumnId) {
           return { ...col, todos: [...col.todos.filter(t => !t.isSelected), ...cleanedItems] };
         }
         return { ...col, todos: col.todos.filter(t => !t.isSelected) };
@@ -320,7 +320,7 @@ export default function Board() {
   };
 
   return (
-    <>
+    <div className="app-container">
       <Navbar 
         globalSearch={globalSearch}
         setGlobalSearch={setGlobalSearch}
@@ -450,6 +450,6 @@ export default function Board() {
         onCancel={() => setDeleteConfig({ isOpen: false, action: null, message: '' })}
         onConfirm={confirmDelete}
       />
-    </>
+    </div>
   );
 }

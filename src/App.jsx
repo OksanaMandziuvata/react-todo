@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from '@/pages/Login';
-import BoardPage from '@/pages/Board';
+import LoginPage from '@/features/pages/Login';
+import Board from '@/features/board';
 import '@/styles.scss';
 
 const ProtectedRoute = ({ children }) => {
@@ -14,7 +14,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<LoginPage />} path="/login" />
-        <Route element={<ProtectedRoute><BoardPage /></ProtectedRoute>} path="/" />
+        <Route element={<ProtectedRoute><Board /></ProtectedRoute>} path="/" />
         <Route element={<Navigate replace to="/" />} path="*" />
       </Routes>
     </BrowserRouter>
